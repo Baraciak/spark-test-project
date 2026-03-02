@@ -1,108 +1,146 @@
-# Feature Specification: API Integration Smoke Test
+# Feature Specification: API Smoke Tests
 
 **Feature Branch**: `005-api-smoke-test`
 **Created**: 2026-03-02
 **Status**: Draft
-**Input**: Verification gate — walidacja API z features 002-004 przed rozpoczęciem pracy frontendowej. Smoke test przez Swagger UI i curl/Postman.
+**Input**: User description: "API smoke tests - E2E tests for all existing API endpoints"
 
 ## User Scenarios & Testing *(mandatory)*
 
-### User Story 1 - Verify full Board → Column → Task tree (Priority: P1)
+### User Story 1 - Health Check E2E Test (Priority: P1)
 
-Jako developer chcę zweryfikować, że API zwraca pełne drzewo board → columns → tasks, aby upewnić się, że frontend otrzyma kompletne dane.
+Jako deweloper chcę test E2E dla health check endpoint `/`, aby potwierdzić że cała konfiguracja testowa działa poprawnie.
 
-**Why this priority**: Pełne drzewo to fundament widoku Kanban — jeśli eager loading nie działa, frontend nie wyświetli tablicy.
+**Why this priority**: Najprostszy test — weryfikuje setup. Ustala wzorzec dla reszty plików.
 
-**Independent Test**: Utworzenie board + columns + tasks → GET /boards/:id zwraca pełną strukturę.
+**Independent Test**: `npm test -w apps/api -- --testPathPattern=app.e2e-spec`
 
 **Acceptance Scenarios**:
 
-1. **Given** pusty system, **When** POST /boards z `{ "name": "Test Board" }`, **Then** 201 z UUID
-2. **Given** board X, **When** POST /columns z `{ "name": "To Do", "boardId": "X" }` × 3 kolumny, **Then** 201 z auto-assigned order 0, 1, 2
-3. **Given** kolumna A, **When** POST /tasks z `{ "title": "Task 1", "columnId": "A" }` × 3 taski, **Then** 201 z order 0, 1, 2
-4. **Given** pełne drzewo, **When** GET /boards/X, **Then** board z columns (order ASC) z tasks (order ASC) — pełna struktura zagnieżdżona
+1. **Given** running app, **When** GET `/`, **Then** 200 + `{ status: "ok", timestamp: <string> }`
 
 ---
 
-### User Story 2 - Verify move task between columns (Priority: P1)
+### User Story 2 - CRUD Smoke Tests for Todo Module (Priority: P1)
 
-Jako developer chcę zweryfikować transakcyjne przenoszenie tasków, aby mieć pewność, że drag & drop na frontendzie będzie miał solidne API.
+Jako deweloper chcę E2E testy pokrywające pełny cykl CRUD dla modułu Todo (POST, GET all, GET by id, PATCH, DELETE) + walidację, aby mieć pewność że kontroler poprawnie obsługuje requesty.
 
-**Why this priority**: Move to najtrudniejsza operacja — transakcyjność i reorder muszą działać poprawnie.
+**Why this priority**: Todo to najprostszy moduł — ustala wzorzec testowy.
 
-**Independent Test**: Move task z kolumny A na pozycję 1 w kolumnie B → order poprawny w obu kolumnach.
+**Independent Test**: `npm test -w apps/api -- --testPathPattern=todos.e2e-spec`
 
 **Acceptance Scenarios**:
 
-1. **Given** kolumna A z taskami [T1(0), T2(1), T3(2)], kolumna B pusta, **When** PATCH /tasks/T2/move z `{ "columnId": "B", "order": 0 }`, **Then** A=[T1(0), T3(1)], B=[T2(0)]
-2. **Given** kolumna A z [T1(0)], kolumna B z [T4(0), T5(1)], **When** move T1 do B na order 1, **Then** A=[], B=[T4(0), T1(1), T5(2)]
-3. **Given** kolumna A z [T1(0), T2(1), T3(2)], **When** move T1 w tej samej A na order 2, **Then** A=[T2(0), T3(1), T1(2)]
+1. **Given** empty state, **When** POST `/todos` with `{ title: "Test" }`, **Then** 201 + body contains `id`, `title`, `completed: false`
+2. **Given** existing todos, **When** GET `/todos`, **Then** 200 + array of todos
+3. **Given** existing todo, **When** GET `/todos/:id`, **Then** 200 + todo object
+4. **Given** existing todo, **When** PATCH `/todos/:id` with `{ completed: true }`, **Then** 200 + updated todo
+5. **Given** existing todo, **When** DELETE `/todos/:id`, **Then** 200
+6. **Given** any POST, **When** send empty body `{}`, **Then** 400
+7. **Given** GET by id, **When** send `"not-a-uuid"`, **Then** 400
+8. **Given** GET by id, **When** send non-existent UUID, **Then** 404
 
 ---
 
-### User Story 3 - Verify cascade delete (Priority: P1)
+### User Story 3 - CRUD Smoke Tests for Board Module (Priority: P1)
 
-Jako developer chcę zweryfikować, że usunięcie boarda kaskadowo usuwa kolumny i taski.
+Jako deweloper chcę E2E testy dla modułu Board (POST, GET all, GET by id z eager-loaded columns, PATCH, DELETE) + walidację.
 
-**Why this priority**: Cascade delete to operacja destrukcyjna — musi działać poprawnie lub spowoduje orphaned records.
+**Why this priority**: Board to root entity Kanban — fundament dla columns i tasks.
 
-**Independent Test**: DELETE /boards/:id → GET /boards/:id zwraca 404, kolumny i taski nieistniejące.
+**Independent Test**: `npm test -w apps/api -- --testPathPattern=boards.e2e-spec`
 
 **Acceptance Scenarios**:
 
-1. **Given** board X z kolumnami i taskami, **When** DELETE /boards/X, **Then** 200
-2. **Given** board X usunięty, **When** GET /boards/X, **Then** 404
-3. **Given** kolumna A należała do board X, **When** GET /columns/A, **Then** 404 (kaskadowo usunięta)
+1. **Given** no boards, **When** POST `/boards` with `{ name: "Sprint 1" }`, **Then** 201 + board object
+2. **Given** existing boards, **When** GET `/boards`, **Then** 200 + array
+3. **Given** existing board, **When** GET `/boards/:id`, **Then** 200 + board with `columns` array
+4. **Given** existing board, **When** PATCH `/boards/:id` with `{ name: "Updated" }`, **Then** 200 + updated
+5. **Given** existing board, **When** DELETE `/boards/:id`, **Then** 200
+6. **Given** POST, **When** empty body, **Then** 400
+7. **Given** GET by id, **When** invalid UUID, **Then** 400
+8. **Given** GET by id, **When** non-existent UUID, **Then** 404
 
 ---
 
-### User Story 4 - Verify Swagger documentation (Priority: P2)
+### User Story 4 - CRUD + Reorder Smoke Tests for Column Module (Priority: P1)
 
-Jako developer chcę sprawdzić, że Swagger UI poprawnie dokumentuje wszystkie endpointy.
+Jako deweloper chcę E2E testy dla modułu Column — CRUD plus transakcyjny reorder — plus walidację.
 
-**Why this priority**: Swagger to kontrakt API — frontend developer opiera się na nim.
+**Why this priority**: Columns mają złożoną logikę reorder wymagającą testów.
 
-**Independent Test**: Otwarcie localhost:3001/docs → widoczne tagi boards, columns, tasks z pełną dokumentacją.
+**Independent Test**: `npm test -w apps/api -- --testPathPattern=columns.e2e-spec`
 
 **Acceptance Scenarios**:
 
-1. **Given** Swagger UI, **When** otwieram /docs, **Then** widzę tag "boards" z 5 endpointami
-2. **Given** Swagger UI, **When** otwieram /docs, **Then** widzę tag "columns" z 6 endpointami (w tym reorder)
-3. **Given** Swagger UI, **When** otwieram /docs, **Then** widzę tag "tasks" z 6 endpointami (w tym move)
-4. **Given** Swagger UI, **When** sprawdzam schemas, **Then** DTO i response models poprawnie opisane
+1. **Given** existing board, **When** POST `/columns` with `{ name: "To Do", boardId: "<uuid>" }`, **Then** 201 + column with auto-assigned `order`
+2. **Given** board with columns, **When** GET `/boards/:boardId/columns`, **Then** 200 + sorted by order ASC
+3. **Given** existing column, **When** GET `/columns/:id`, **Then** 200 + column object
+4. **Given** existing column, **When** PATCH `/columns/:id` with `{ name: "Done" }`, **Then** 200 + updated
+5. **Given** existing column, **When** DELETE `/columns/:id`, **Then** 200
+6. **Given** board with columns, **When** PATCH `/boards/:boardId/columns/reorder` with reversed columnIds, **Then** 200 + columns in new order
+7. **Given** POST, **When** missing boardId, **Then** 400
+8. **Given** reorder, **When** duplicate columnIds, **Then** 400
+9. **Given** POST, **When** non-existent boardId, **Then** 404
+
+---
+
+### User Story 5 - CRUD + Move Smoke Tests for Task Module (Priority: P1)
+
+Jako deweloper chcę E2E testy dla modułu Task — CRUD plus transakcyjny move — plus walidację.
+
+**Why this priority**: Task.move to najbardziej złożona operacja w API.
+
+**Independent Test**: `npm test -w apps/api -- --testPathPattern=tasks.e2e-spec`
+
+**Acceptance Scenarios**:
+
+1. **Given** existing column, **When** POST `/tasks` with `{ title: "Login page", columnId: "<uuid>" }`, **Then** 201 + task with auto-assigned `order`
+2. **Given** column with tasks, **When** GET `/columns/:columnId/tasks`, **Then** 200 + sorted by order ASC
+3. **Given** existing task, **When** GET `/tasks/:id`, **Then** 200 + task object
+4. **Given** existing task, **When** PATCH `/tasks/:id` with `{ title: "Updated" }`, **Then** 200 + updated
+5. **Given** existing task, **When** DELETE `/tasks/:id`, **Then** 200
+6. **Given** task in column A and column B exists, **When** PATCH `/tasks/:id/move` with `{ columnId: B, order: 0 }`, **Then** 200 + moved task
+7. **Given** POST, **When** missing columnId, **Then** 400
+8. **Given** move, **When** invalid order (negative), **Then** 400
+9. **Given** POST, **When** non-existent columnId, **Then** 404
 
 ---
 
 ### Edge Cases
 
-- Co się dzieje przy move taska z order > liczba tasków? → Task ląduje na końcu
-- Co się dzieje przy POST /columns z nieistniejącym boardId? → 404 z BoardsService
-- Co się dzieje przy invalid UUID w parametrze? → 400 z ParseUUIDPipe
+- POST z dodatkowym polem (`{ title: "X", extra: "Y" }`) → whitelist powinno usunąć `extra`, 201
+- PATCH z pustym body `{}` → 200, bez zmian
+- Reorder z niepełną listą columnIds → 400
+- Reorder z columnId z innego boarda → 400
 
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
 
-- **FR-001**: System MUSI przejść pełny flow: create board → create columns → create tasks → GET full tree → verify structure
-- **FR-002**: System MUSI poprawnie wykonać move task między kolumnami z prawidłowym reorder
-- **FR-003**: System MUSI poprawnie wykonać move task w ramach tej samej kolumny
-- **FR-004**: System MUSI kaskadowo usunąć kolumny i taski przy DELETE board
-- **FR-005**: Swagger UI MUSI wyświetlać tagi boards, columns, tasks z kompletną dokumentacją
-- **FR-006**: Wszystkie walidacje DTO MUSZĄ zwracać 400 z czytelnym komunikatem
-- **FR-007**: Wszystkie 404 MUSZĄ zwracać czytelne komunikaty (np. "Board #uuid not found")
+- **FR-001**: Każdy moduł API (App, Todo, Board, Column, Task) MUSI mieć plik E2E test (`*.e2e-spec.ts`)
+- **FR-002**: Testy MUSZĄ używać Supertest z mockowanymi serwisami (bez bazy danych)
+- **FR-003**: Testy MUSZĄ pokrywać happy path dla każdej operacji CRUD + specjalne operacje (reorder, move)
+- **FR-004**: Testy MUSZĄ weryfikować kody HTTP (201/200/400/404)
+- **FR-005**: Testy MUSZĄ weryfikować strukturę response body
+- **FR-006**: Testy walidacji MUSZĄ pokrywać: brakujące wymagane pola, nieprawidłowe UUID, nieistniejące zasoby
+- **FR-007**: Testy MUSZĄ konfigurować globalny ValidationPipe (whitelist + transform) identycznie jak `main.ts`
+- **FR-008**: Testy MUSZĄ przechodzić z `npm test -w apps/api`
+- **FR-009**: Brak zmian w kodzie produkcyjnym — tylko nowe pliki testowe
 
-### Key Entities
+### Key Entities *(already exist, no changes)*
 
-- Brak nowych encji — feature weryfikuje istniejące Board, BoardColumn, Task
+- **Todo**: Simple CRUD entity (title, completed)
+- **Board**: Root Kanban entity (name, description, columns[])
+- **BoardColumn**: Kanban column (name, order, boardId, tasks[])
+- **Task**: Kanban task (title, description, order, columnId)
 
 ## Success Criteria *(mandatory)*
 
 ### Measurable Outcomes
 
-- **SC-001**: Pełny flow create → read tree działa end-to-end
-- **SC-002**: Move task między kolumnami — order poprawny w obu kolumnach
-- **SC-003**: Move task w ramach kolumny — reorder poprawny
-- **SC-004**: CASCADE delete board → kolumny i taski usunięte
-- **SC-005**: Swagger UI kompletny — 3 tagi, ~17 endpointów
-- **SC-006**: `npm test -w apps/api` przechodzi
-- **SC-007**: Brak orphaned records po operacjach delete
+- **SC-001**: `npm test -w apps/api` przechodzi z 0 failures
+- **SC-002**: Min. 1 test per endpoint — 22 endpointy → min. 22 test cases
+- **SC-003**: Min. 3 scenariusze walidacji/błędów per moduł (todo, board, column, task)
+- **SC-004**: Czas wykonania testów: poniżej 30s (mocki, brak I/O bazy)
+- **SC-005**: Brak zmian w kodzie produkcyjnym — tylko nowe pliki testowe

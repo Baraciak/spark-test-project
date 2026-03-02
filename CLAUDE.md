@@ -35,6 +35,12 @@ spark_test_project/
 ├── apps/
 │   ├── api/                          # NestJS 11 backend
 │   │   ├── eslint.config.mjs         # ESLint 9 flat config (typescript-eslint)
+│   │   ├── test/                     # E2E testy (Supertest + mocked services)
+│   │   │   ├── app.e2e-spec.ts       # Health check
+│   │   │   ├── todos.e2e-spec.ts     # Todos CRUD + walidacja
+│   │   │   ├── boards.e2e-spec.ts    # Boards CRUD + walidacja
+│   │   │   ├── columns.e2e-spec.ts   # Columns CRUD + reorder + walidacja
+│   │   │   └── tasks.e2e-spec.ts     # Tasks CRUD + move + walidacja
 │   │   └── src/
 │   │       ├── main.ts               # CORS, ValidationPipe, Swagger
 │   │       ├── app.module.ts          # TypeORM config, moduły
@@ -173,9 +179,10 @@ npm run build:web
 
 # Testy
 npm test                 # Wszystkie workspace'y
-npm test -w apps/api     # Tylko backend
+npm test -w apps/api     # Tylko backend (unit + E2E)
 npm test -w apps/web     # Tylko frontend
 npm test -w apps/api -- --testPathPattern=tasks  # Tylko testy danego modułu
+npm run test:e2e -w apps/api  # Tylko E2E testy (test/*.e2e-spec.ts)
 
 # Lint
 npm run lint --workspaces --if-present
