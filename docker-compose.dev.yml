@@ -1,0 +1,49 @@
+services:
+  mariadb:
+    ports:
+      - "3306:3306"
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+      target: deps
+    working_dir: /app/apps/api
+    command: npx nest start --watch
+    ports:
+      - "3001:3001"
+      - "9229:9229"
+    volumes:
+      - ./tsconfig.base.json:/app/tsconfig.base.json:delegated
+      - ./apps/api/src:/app/apps/api/src:delegated
+      - ./apps/api/tsconfig.json:/app/apps/api/tsconfig.json:delegated
+      - ./apps/api/tsconfig.build.json:/app/apps/api/tsconfig.build.json:delegated
+      - ./apps/api/nest-cli.json:/app/apps/api/nest-cli.json:delegated
+    environment:
+      NODE_ENV: development
+      PORT: "3001"
+      DB_HOST: mariadb
+      DB_PORT: "3306"
+      DB_USER: spark
+      DB_PASSWORD: spark_secret
+      DB_NAME: spark_db
+      CORS_ORIGIN: http://localhost:3000
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      target: deps
+    working_dir: /app/apps/web
+    command: npx next dev --hostname 0.0.0.0
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./tsconfig.base.json:/app/tsconfig.base.json:delegated
+      - ./apps/web/src:/app/apps/web/src:delegated
+      - ./apps/web/next.config.ts:/app/apps/web/next.config.ts:delegated
+      - ./apps/web/tsconfig.json:/app/apps/web/tsconfig.json:delegated
+      - ./apps/web/postcss.config.mjs:/app/apps/web/postcss.config.mjs:delegated
+      - ./apps/web/public:/app/apps/web/public:delegated
+    environment:
+      BACKEND_URL: http://api:3001
