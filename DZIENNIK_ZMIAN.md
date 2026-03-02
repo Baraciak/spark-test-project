@@ -6,6 +6,68 @@ Historia prac nad projektem.
 
 ## 2026-03
 
+### 2026-03-02 (Claude) - Sesja 6
+
+**Temat: BoardColumn Entity & CRUD API (feature 003)**
+
+1. **BoardColumn Entity** — encja kolumny tablicy Kanban
+   - `apps/api/src/columns/entities/board-column.entity.ts`
+   - Extends BaseEntity (UUID PK, timestamps)
+   - Pola: name (varchar 255), order (int, default 0), boardId (FK)
+   - ManyToOne → Board z onDelete CASCADE
+
+2. **Board Entity Update** — dodana relacja OneToMany → BoardColumn
+   - `apps/api/src/boards/entities/board.entity.ts`
+   - BoardsService.findOne() eager loaduje columns (order ASC)
+
+3. **ColumnsService** — pełna logika biznesowa
+   - DI: BoardsService (walidacja istnienia boarda — SOLID)
+   - create(): auto-assign order = max(order) + 1
+   - findAllByBoard(): sorted by order ASC
+   - reorder(): walidacja duplikatów, obcych ID, kompletności + transakcja
+   - findOne(), update(), remove(): standardowy CRUD
+
+4. **ColumnsController** — 6 endpointów z Swagger
+   - POST /columns (201, 400, 404)
+   - GET /boards/:boardId/columns (200, 404)
+   - GET /columns/:id (200, 404)
+   - PATCH /columns/:id (200, 404)
+   - DELETE /columns/:id (200, 404)
+   - PATCH /boards/:boardId/columns/reorder (200, 400, 404)
+
+5. **DTOs** — walidacja class-validator
+   - CreateColumnDto: name (IsNotEmpty, MaxLength 255), boardId (IsUUID)
+   - UpdateColumnDto: name (IsOptional, MaxLength 255)
+   - ReorderColumnsDto: columnIds (ArrayNotEmpty, IsUUID each)
+
+6. **Migracja** — `CreateBoardColumns` (board_columns + FK CASCADE)
+
+7. **Testy** — 74/74 PASS
+   - Unit: ColumnsService (15 testów — CRUD, auto-order, reorder walidacja, rollback)
+   - E2E: ColumnsController (19 testów — wszystkie endpointy, validation 400, not found 404)
+   - Istniejące: BoardsService/Controller (26 testów — zaktualizowane o relations)
+
+**Pliki nowe:**
+- `apps/api/src/columns/columns.module.ts`
+- `apps/api/src/columns/columns.controller.ts`
+- `apps/api/src/columns/columns.service.ts`
+- `apps/api/src/columns/entities/board-column.entity.ts`
+- `apps/api/src/columns/dto/create-column.dto.ts`
+- `apps/api/src/columns/dto/update-column.dto.ts`
+- `apps/api/src/columns/dto/reorder-columns.dto.ts`
+- `apps/api/src/columns/columns.service.spec.ts`
+- `apps/api/src/columns/columns.controller.spec.ts`
+- `apps/api/src/migrations/1772478502575-CreateBoardColumns.ts`
+- `specs/003-column-entity-api/{spec,plan,tasks,data-model}.md`
+
+**Pliki zmienione:**
+- `apps/api/src/boards/entities/board.entity.ts` (OneToMany columns)
+- `apps/api/src/boards/boards.service.ts` (findOne eager load columns)
+- `apps/api/src/boards/boards.service.spec.ts` (updated findOne assertion)
+- `apps/api/src/app.module.ts` (import ColumnsModule)
+
+---
+
 ### 2026-03-02 (Claude) - Sesja 5
 
 **Temat: Board Entity & CRUD API (feature 002)**

@@ -195,30 +195,14 @@ Jeśli testy nie przechodzą — napraw i powtórz.
 Finalizuję: dokumentacja, commit, PR...
 ```
 
-### Krok 4.1: DZIENNIK_ZMIAN.md
+### Krok 4.1: Sprawdź dokumentację (/check-docs)
 
-Dodaj wpis do `DZIENNIK_ZMIAN.md`:
+Uruchom `/check-docs` — sprawdza aktualność DZIENNIK_ZMIAN.md, CLAUDE.md i README.md względem zmian w kodzie. Napraw wszystkie wykryte rozbieżności:
+- DZIENNIK_ZMIAN.md: dodaj wpis sesji z opisem zmian
+- CLAUDE.md: zaktualizuj "Struktura projektu" i "API Endpoints"
+- README.md: zaktualizuj "API Endpoints" i inne zmienione sekcje
 
-```markdown
-### [DATA] (Claude) - Sesja N
-
-**Temat: [Opis z spec.md]**
-
-1. **[Nazwa funkcjonalności]** - opis
-   - Szczegóły implementacji
-   - Pliki: `ścieżka/do/pliku`
-
-**Pliki zmienione:**
-- `ścieżka` (nowy/update)
-```
-
-### Krok 4.2: Aktualizacja CLAUDE.md
-
-Jeśli dodano nowy moduł/endpoint — zaktualizuj:
-- Sekcję "Struktura projektu"
-- Sekcję "API Endpoints"
-
-### Krok 4.3: Podsumowanie
+### Krok 4.2: Podsumowanie
 
 Pokaż podsumowanie:
 
