@@ -22,7 +22,7 @@ Każdy zasób = osobny moduł NestJS:
 - Entity: UUID PK + CreateDateColumn + UpdateDateColumn
 - Wyjątki: wbudowane NestJS (NotFoundException, BadRequestException)
 - NIE używaj `synchronize: true` na produkcji — migracje TypeORM
-- NIE usuwaj fizycznie rekordów — soft delete
+- NIE usuwaj fizycznie rekordów na produkcji — soft delete (wyjątek: fizyczny delete dozwolony w fazie MVP, przed wdrożeniem audytu)
 
 ### III. Frontend (Next.js)
 

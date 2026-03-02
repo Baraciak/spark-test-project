@@ -1,6 +1,6 @@
 # Feature Specification: Board List Page (/boards)
 
-**Feature Branch**: `006-board-list-page`
+**Feature Branch**: `008-board-list-page`
 **Created**: 2026-03-02
 **Status**: Draft
 **Input**: User description: "Utwórz stronę /boards z formularzem tworzenia tablicy, siatką kart BoardCard z nawigacją do /boards/[id] — styl iOS glass, komponenty MUI"

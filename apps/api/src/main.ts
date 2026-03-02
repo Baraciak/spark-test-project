@@ -22,6 +22,7 @@ async function bootstrap() {
     .setDescription('Todo CRUD API for spark_test_project')
     .setVersion('1.0')
     .addTag('todos')
+    .addTag('boards')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

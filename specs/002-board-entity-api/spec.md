@@ -103,13 +103,13 @@ Jako developer chcę usunąć tablicę.
 - **FR-005**: System MUSI mieć Swagger dekoratory (@ApiTags, @ApiOperation, @ApiResponse) na każdym endpoincie
 - **FR-006**: BoardsModule MUSI eksportować BoardsService (potrzebny w przyszłych modułach — SOLID DI)
 - **FR-007**: Board findAll MUSI sortować po createdAt DESC
-- **FR-008**: Board findOne MUSI eager loadować relację columns (pusta na tym etapie, gotowa na feature 003)
+- **FR-008**: Board entity MUSI być przygotowany na relację OneToMany → BoardColumn (relacja zostanie dodana w feature 003 — w tym feature findOne zwraca board bez columns)
 - **FR-009**: System MUSI wygenerować migrację TypeORM tworzącą tabelę `boards`
 
 ### Key Entities
 
 - **BaseEntity** (abstract): Wspólna klasa bazowa — id (UUID PK), createdAt, updatedAt. Dziedziczą po niej Board, BoardColumn, Task.
-- **Board**: Tablica Kanban — name (string), description (string nullable). Relacja OneToMany → BoardColumn (dodana z `cascade: true`).
+- **Board**: Tablica Kanban — name (string), description (string nullable). Relacja OneToMany → BoardColumn (zostanie dodana z `cascade: true` w feature 003).
 
 ## Success Criteria *(mandatory)*
 
@@ -117,7 +117,7 @@ Jako developer chcę usunąć tablicę.
 
 - **SC-001**: POST /boards z poprawnym DTO zwraca 201 z kompletnym obiektem Board
 - **SC-002**: GET /boards zwraca listę posortowaną po createdAt DESC
-- **SC-003**: GET /boards/:id zwraca board z relacjami (columns array)
+- **SC-003**: GET /boards/:id zwraca board (relacja columns zostanie dodana w feature 003)
 - **SC-004**: Swagger UI (localhost:3001/docs) wyświetla tag "boards" z 5 endpointami
 - **SC-005**: Migracja tworzy tabelę `boards` z kolumnami id, name, description, createdAt, updatedAt
 - **SC-006**: `npm test -w apps/api` przechodzi po implementacji

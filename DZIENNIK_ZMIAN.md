@@ -6,6 +6,60 @@ Historia prac nad projektem.
 
 ## 2026-03
 
+### 2026-03-02 (Claude) - Sesja 5
+
+**Temat: Board Entity & CRUD API (feature 002)**
+
+1. **Reorganizacja planu specs/** — przenumerowanie featurów 002-010
+   - Dodano `005-api-smoke-test` (bramka walidacyjna API)
+   - Split `005-board-frontend-state` → `006-board-types-api` + `007-board-redux-state`
+   - Przenumerowano 006→008, 007→009, 008→010
+
+2. **BaseEntity** — abstrakcyjna klasa bazowa z UUID PK, timestamps
+   - `apps/api/src/common/entities/base.entity.ts`
+   - Reusable dla Board, BoardColumn, Task
+
+3. **Board CRUD API** — pełny moduł NestJS
+   - Entity: Board (name, description nullable)
+   - DTOs: CreateBoardDto (name required), UpdateBoardDto (all optional)
+   - Service: create, findAll (DESC), findOne (404), update, remove
+   - Controller: 5 endpointów z Swagger dekoratorami + ParseUUIDPipe
+   - Module: eksportuje BoardsService (SOLID DI)
+
+4. **Migracja** — `CreateBoards` tworzy tabelę `boards`
+
+5. **Testy** — 30/30 PASS
+   - Unit: BoardsService (12 testów — CRUD + NotFoundException)
+   - E2E: BoardsController (12 testów — HTTP status codes, validation, UUID pipe)
+
+6. **Konstytucja** — dodano MVP exception dla fizycznego delete
+
+**Pliki nowe:**
+- `apps/api/src/common/entities/base.entity.ts`
+- `apps/api/src/boards/boards.module.ts`
+- `apps/api/src/boards/boards.controller.ts`
+- `apps/api/src/boards/boards.service.ts`
+- `apps/api/src/boards/entities/board.entity.ts`
+- `apps/api/src/boards/dto/create-board.dto.ts`
+- `apps/api/src/boards/dto/update-board.dto.ts`
+- `apps/api/src/boards/boards.service.spec.ts`
+- `apps/api/src/boards/boards.controller.spec.ts`
+- `apps/api/src/migrations/1772475941993-CreateBoards.ts`
+- `specs/005-api-smoke-test/spec.md`
+- `specs/007-board-redux-state/spec.md`
+
+**Pliki zmienione:**
+- `apps/api/src/app.module.ts` (import BoardsModule)
+- `apps/api/src/main.ts` (Swagger tag 'boards')
+- `.specify/memory/constitution.md` (MVP delete exception)
+- `specs/002-board-entity-api/{spec,plan,tasks}.md` (analysis fixes)
+- `specs/006-board-types-api/spec.md` (split z old 005)
+- `specs/008-board-list-page/spec.md` (renumber)
+- `specs/009-kanban-board-view/spec.md` (renumber)
+- `specs/010-drag-and-drop/spec.md` (renumber)
+
+---
+
 ### 2026-03-02 (Claude) - Sesja 4
 
 **Temat: TypeORM Migracje + NestJS Cheatsheet**

@@ -1,6 +1,6 @@
 # Feature Specification: Drag & Drop with @hello-pangea/dnd
 
-**Feature Branch**: `008-drag-and-drop`
+**Feature Branch**: `010-drag-and-drop`
 **Created**: 2026-03-02
 **Status**: Draft
 **Input**: User description: "Dodaj drag & drop przenoszenie tasków między kolumnami przy użyciu @hello-pangea/dnd — optimistic Redux updates, wywołania API move, wizualny feedback drag"
