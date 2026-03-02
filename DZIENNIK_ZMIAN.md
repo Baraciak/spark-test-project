@@ -6,6 +6,55 @@ Historia prac nad projektem.
 
 ## 2026-03
 
+### 2026-03-02 (Claude) - Sesja 13
+
+**Temat: Kanban Board View — strona /boards/[id] (feature 009)**
+
+1. **Strona /boards/[id]** — `apps/web/src/app/boards/[id]/page.tsx`
+   - Dynamic route, fetchBoard(id) on mount, loading/error/success states
+   - Error: "Board not found" z back button do /boards
+   - Success: renderuje KanbanBoard z activeBoard
+
+2. **Komponenty Kanban** — `apps/web/src/components/boards/`
+   - `KanbanBoard.tsx` — horizontal flex layout, overflow-x scroll, empty state "No columns yet", back button
+   - `KanbanColumn.tsx` — header z inline edit nazwy, lista tasków, inline add task form, delete z potwierdzeniem
+   - `KanbanTaskCard.tsx` — karta zadania (title, description preview), click → modal
+   - `TaskDetailModal.tsx` — MUI Dialog z editable title/description, created date, delete z potwierdzeniem
+   - `AddColumnForm.tsx` — TextField + submit button, dispatch addColumn
+   - `ConfirmDeleteDialog.tsx` — reusable dialog z configurable title/message
+
+3. **ESLint config** — `apps/web/.eslintrc.json`
+   - Dodano brakującą konfigurację ESLint (`extends: "next/core-web-vitals"`)
+
+4. **Testy** — `apps/web/__tests__/`
+   - `KanbanBoard.test.tsx` — 6 testów: render name/desc, back button, columns, tasks, empty state, null description
+   - `KanbanColumn.test.tsx` — 8 testów: name/count, task cards, add task form, inline edit, cancel edit, delete dialog, empty
+   - `TaskDetailModal.test.tsx` — 9 testów: title/desc inputs, created date, heading, delete btn, save disabled/enabled, delete confirm, cancel, null desc
+
+5. **Spec-kit artefakty** — `specs/009-kanban-board-view/{spec,plan,tasks}.md`
+   - Analiza spójności: naprawiono brak testów (Art. V), FR-010 coverage, Input description
+
+**Weryfikacja:** Build ✅ PASS, Testy ✅ 237/237 PASS (207 API + 30 web), Lint ✅ 0 errors (API + web), Typecheck ✅ 0 errors
+
+**Pliki nowe:**
+- `apps/web/src/app/boards/[id]/page.tsx`
+- `apps/web/src/components/boards/KanbanBoard.tsx`
+- `apps/web/src/components/boards/KanbanColumn.tsx`
+- `apps/web/src/components/boards/KanbanTaskCard.tsx`
+- `apps/web/src/components/boards/TaskDetailModal.tsx`
+- `apps/web/src/components/boards/AddColumnForm.tsx`
+- `apps/web/src/components/boards/ConfirmDeleteDialog.tsx`
+- `apps/web/__tests__/KanbanBoard.test.tsx`
+- `apps/web/__tests__/KanbanColumn.test.tsx`
+- `apps/web/__tests__/TaskDetailModal.test.tsx`
+- `apps/web/.eslintrc.json`
+- `specs/009-kanban-board-view/{spec,plan,tasks}.md`
+
+**Pliki zmienione:**
+- `apps/web/jest.config.ts` (bez zmian netto — reverted setup file experiment)
+
+---
+
 ### 2026-03-02 (Claude) - Sesja 12
 
 **Temat: Board List Page — strona /boards (feature 008)**

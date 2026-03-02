@@ -89,11 +89,13 @@ spark_test_project/
 │           │   ├── layout.tsx, page.tsx, providers.tsx
 │           │   ├── HomeContent.tsx    # Główny widok strony + CTA karty
 │           │   ├── todos/page.tsx     # Strona /todos
-│           │   └── boards/page.tsx    # Strona /boards (lista tablic)
+│           │   └── boards/
+│           │       ├── page.tsx       # Strona /boards (lista tablic)
+│           │       └── [id]/page.tsx  # Strona /boards/[id] (widok Kanban)
 │           ├── components/
 │           │   ├── layout/AppLayout.tsx  # Navbar: Home, Todos, Boards
 │           │   ├── todos/            # TodoForm, TodoList, TodoItem
-│           │   └── boards/           # BoardForm, BoardList, BoardCard
+│           │   └── boards/           # BoardForm, BoardList, BoardCard, KanbanBoard, KanbanColumn, KanbanTaskCard, TaskDetailModal, AddColumnForm, ConfirmDeleteDialog
 │           ├── store/                # Redux Toolkit
 │           │   ├── store.ts
 │           │   ├── hooks.ts          # useAppDispatch, useAppSelector
@@ -268,5 +270,6 @@ Konstytucja: `.specify/memory/constitution.md`
 - TypeScript 5.7 / Node.js 22
 
 ## Recent Changes
+- 009-kanban-board-view: Added /boards/[id] page with KanbanBoard, KanbanColumn, KanbanTaskCard, TaskDetailModal, AddColumnForm, ConfirmDeleteDialog + tests
 - 008-board-list-page: Added /boards page with BoardForm, BoardList, BoardCard + nav updates
 - 007-board-redux-state: Added boardsSlice with boards/columns/tasks state management
