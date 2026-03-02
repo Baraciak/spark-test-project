@@ -195,14 +195,26 @@ Jeśli testy nie przechodzą — napraw i powtórz.
 Finalizuję: dokumentacja, commit, PR...
 ```
 
-### Krok 4.1: Sprawdź dokumentację (/check-docs)
+### Krok 4.1: Lint i Typecheck
+
+Uruchom ESLint i sprawdzenie typów dla backendu i frontendu:
+
+```bash
+npm run lint -w apps/api
+npm run typecheck -w apps/api
+npm run lint -w apps/web
+```
+
+Jeśli są błędy — napraw je przed kontynuacją.
+
+### Krok 4.2: Sprawdź dokumentację (/check-docs)
 
 Uruchom `/check-docs` — sprawdza aktualność DZIENNIK_ZMIAN.md, CLAUDE.md i README.md względem zmian w kodzie. Napraw wszystkie wykryte rozbieżności:
 - DZIENNIK_ZMIAN.md: dodaj wpis sesji z opisem zmian
 - CLAUDE.md: zaktualizuj "Struktura projektu" i "API Endpoints"
 - README.md: zaktualizuj "API Endpoints" i inne zmienione sekcje
 
-### Krok 4.2: Podsumowanie
+### Krok 4.3: Podsumowanie
 
 Pokaż podsumowanie:
 

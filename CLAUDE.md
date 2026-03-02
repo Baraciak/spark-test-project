@@ -34,6 +34,7 @@ Brak znanych blokerów.
 spark_test_project/
 ├── apps/
 │   ├── api/                          # NestJS 11 backend
+│   │   ├── eslint.config.mjs         # ESLint 9 flat config (typescript-eslint)
 │   │   └── src/
 │   │       ├── main.ts               # CORS, ValidationPipe, Swagger
 │   │       ├── app.module.ts          # TypeORM config, moduły
@@ -177,6 +178,11 @@ npm test -w apps/web     # Tylko frontend
 
 # Lint
 npm run lint --workspaces --if-present
+npm run lint -w apps/api     # Tylko backend (ESLint 9 + typescript-eslint)
+npm run lint -w apps/web     # Tylko frontend (Next.js ESLint)
+
+# Typecheck
+npm run typecheck -w apps/api   # tsc --noEmit (sprawdzanie typów bez kompilacji)
 
 # NestJS CLI (generowanie)
 npx nest generate resource nazwa --no-spec   # W apps/api/

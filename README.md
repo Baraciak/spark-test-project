@@ -81,6 +81,9 @@ npm run docker:down
 | `npm run docker:dev` | Docker dev with hot-reload |
 | `npm run docker:prod` | Docker production build |
 | `npm run docker:down` | Stop Docker containers |
+| `npm run lint -w apps/api` | ESLint backend (typescript-eslint) |
+| `npm run lint -w apps/web` | ESLint frontend (Next.js) |
+| `npm run typecheck -w apps/api` | TypeScript type check (`tsc --noEmit`) |
 | `npm run migration:generate -- src/migrations/Name` | Generate migration from entity diff (in `apps/api/`) |
 | `npm run migration:run` | Run pending migrations (in `apps/api/`) |
 | `npm run migration:revert` | Revert last migration (in `apps/api/`) |

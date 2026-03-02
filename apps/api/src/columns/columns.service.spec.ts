@@ -12,7 +12,7 @@ describe('ColumnsService', () => {
   let service: ColumnsService;
   let repository: jest.Mocked<Repository<BoardColumn>>;
   let boardsService: jest.Mocked<BoardsService>;
-  let dataSource: jest.Mocked<DataSource>;
+  let _dataSource: jest.Mocked<DataSource>;
   let queryRunner: jest.Mocked<QueryRunner>;
 
   const boardId = '550e8400-e29b-41d4-a716-446655440000';
@@ -24,6 +24,7 @@ describe('ColumnsService', () => {
     order: 0,
     boardId,
     board: {} as BoardColumn['board'],
+    tasks: [],
     createdAt: new Date('2026-03-02'),
     updatedAt: new Date('2026-03-02'),
   };
@@ -72,7 +73,7 @@ describe('ColumnsService', () => {
     service = module.get<ColumnsService>(ColumnsService);
     repository = module.get(getRepositoryToken(BoardColumn));
     boardsService = module.get(BoardsService);
-    dataSource = module.get(DataSource);
+    _dataSource = module.get(DataSource);
   });
 
   it('should be defined', () => {

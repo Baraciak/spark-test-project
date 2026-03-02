@@ -19,6 +19,7 @@ describe('ColumnsController', () => {
     order: 0,
     boardId,
     board: {} as BoardColumn['board'],
+    tasks: [],
     createdAt: new Date('2026-03-02'),
     updatedAt: new Date('2026-03-02'),
   };

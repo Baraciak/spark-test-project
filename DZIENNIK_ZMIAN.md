@@ -6,6 +6,44 @@ Historia prac nad projektem.
 
 ## 2026-03
 
+### 2026-03-02 (Claude) - Sesja 8
+
+**Temat: ESLint + TypeScript Typecheck dla apps/api**
+
+1. **ESLint 9 setup** — konfiguracja lintingu dla backendu
+   - Pakiety: `eslint`, `@typescript-eslint/eslint-plugin`, `@typescript-eslint/parser`
+   - `apps/api/eslint.config.mjs` — flat config (ESLint 9)
+   - Type-aware parsing dla `src/` (via tsconfig.json), basic parsing dla `test/`
+   - `@typescript-eslint/no-unused-vars` → warn z `_` prefix ignored
+
+2. **Typecheck script** — `tsc --noEmit` jako osobny krok
+   - `npm run typecheck -w apps/api` — sprawdza typy bez kompilacji
+   - Wyłapuje błędy które ESLint nie pokrywa (brakujące property, złe typy)
+
+3. **Fix błędów typów w testach** — brakujące property w mockach
+   - `boards.controller.spec.ts` — dodano `columns: []` do mockBoard
+   - `boards.service.spec.ts` — dodano `columns: []` do mockBoard
+   - `columns.controller.spec.ts` — dodano `tasks: []` do mockColumn
+   - `columns.service.spec.ts` — dodano `tasks: []` do mockColumn, `dataSource` → `_dataSource`
+
+4. **Aktualizacja /start-task** — Faza 4 rozszerzona
+   - Krok 4.1: Lint (`npm run lint`) + Typecheck (`npm run typecheck`) przed /check-docs
+
+**Weryfikacja:** ESLint ✅ 0 errors, Typecheck ✅ 0 errors, Testy ✅ 126/126 PASS
+
+**Pliki nowe:**
+- `apps/api/eslint.config.mjs`
+
+**Pliki zmienione:**
+- `apps/api/package.json` (devDependencies ESLint, skrypt typecheck)
+- `apps/api/src/boards/boards.controller.spec.ts` (fix mockBoard)
+- `apps/api/src/boards/boards.service.spec.ts` (fix mockBoard)
+- `apps/api/src/columns/columns.controller.spec.ts` (fix mockColumn)
+- `apps/api/src/columns/columns.service.spec.ts` (fix mockColumn)
+- `.claude/commands/start-task.md` (lint + typecheck w Fazie 4)
+
+---
+
 ### 2026-03-02 (Claude) - Sesja 7
 
 **Temat: Task Entity & CRUD API + Move Endpoint (feature 004)**
