@@ -96,6 +96,17 @@ npm run docker:down
 | `GET` | `/todos/:id` | Get single todo |
 | `PATCH` | `/todos/:id` | Update todo |
 | `DELETE` | `/todos/:id` | Delete todo |
+| `POST` | `/boards` | Create board |
+| `GET` | `/boards` | List all boards |
+| `GET` | `/boards/:id` | Get single board (with columns) |
+| `PATCH` | `/boards/:id` | Update board |
+| `DELETE` | `/boards/:id` | Delete board (cascades columns) |
+| `POST` | `/columns` | Create column in a board |
+| `GET` | `/boards/:boardId/columns` | List columns for a board (order ASC) |
+| `GET` | `/columns/:id` | Get single column |
+| `PATCH` | `/columns/:id` | Update column |
+| `DELETE` | `/columns/:id` | Delete column |
+| `PATCH` | `/boards/:boardId/columns/reorder` | Reorder columns within a board |
 
 ## Environment Variables
 

@@ -202,7 +202,104 @@ export class TodosService {
 
 ---
 
-## 6. Dependency Injection
+## 6. Zapytania do bazy — Eloquent vs TypeORM
+
+TypeORM ma 3 poziomy (od najprostszego):
+
+### Repository API (odpowiednik `Todo::find()`, `Todo::create()`)
+
+```php
+// Laravel
+Todo::all();
+Todo::findOrFail($id);
+Todo::create(['title' => 'Kup mleko']);
+$todo->update(['completed' => true]);
+$todo->delete();
+Todo::where('completed', true)->orderBy('created_at', 'desc')->get();
+```
+
+```typescript
+// TypeORM
+repo.find();
+repo.findOne({ where: { id } });          // + ręczne throw NotFoundException
+repo.create({ title: 'Kup mleko' });      // obiekt w pamięci
+repo.save(todo);                           // INSERT/UPDATE do bazy
+repo.remove(todo);
+repo.find({ where: { completed: true }, order: { createdAt: 'DESC' } });
+```
+
+### QueryBuilder (odpowiednik Eloquent query builder / `DB::table()`)
+
+```php
+// Laravel
+Todo::where('completed', true)
+    ->where('created_at', '>', $date)
+    ->withCount('comments')
+    ->orderBy('created_at', 'desc')
+    ->paginate(10);
+```
+
+```typescript
+// TypeORM
+repo.createQueryBuilder('todo')
+  .where('todo.completed = :completed', { completed: true })
+  .andWhere('todo.createdAt > :date', { date })
+  .loadRelationCountAndMap('todo.commentsCount', 'todo.comments')
+  .orderBy('todo.createdAt', 'DESC')
+  .skip(0).take(10)
+  .getMany();
+```
+
+### Raw SQL (odpowiednik `DB::raw()` — tylko w migracjach / specjalnych przypadkach)
+
+```php
+// Laravel
+DB::statement('CREATE TABLE ...');
+DB::select('SELECT * FROM todos WHERE id = ?', [$id]);
+```
+
+```typescript
+// TypeORM
+queryRunner.query(`CREATE TABLE ...`);
+queryRunner.query(`SELECT * FROM todos WHERE id = ?`, [id]);
+```
+
+### Relacje
+
+```php
+// Laravel
+class Folder extends Model {
+    public function images() { return $this->hasMany(Image::class); }
+    public function user()   { return $this->belongsTo(User::class); }
+}
+$folder->images;                    // lazy load
+Folder::with('images')->get();      // eager load
+```
+
+```typescript
+// TypeORM
+@Entity()
+class Folder {
+  @OneToMany(() => Image, (image) => image.folder)
+  images: Image[];
+
+  @ManyToOne(() => User, (user) => user.folders)
+  user: User;
+}
+repo.find({ relations: ['images'] });           // eager load
+repo.findOne({ where: { id }, relations: ['images', 'user'] });
+```
+
+| Eloquent / Laravel | TypeORM | Kiedy używać |
+|--------------------|---------|--------------|
+| `Todo::find()`, `::create()` | `repo.find()`, `repo.save()` | Proste CRUD (90% przypadków) |
+| `Todo::where()->orderBy()` | `repo.createQueryBuilder()` | Filtry, joiny, subqueries |
+| `::with('relation')` | `{ relations: ['name'] }` | Eager loading relacji |
+| `DB::raw()` | `queryRunner.query()` | Migracje, specjalne przypadki |
+
+---
+
+## 7. Dependency Injection
 
 ```php
 // Laravel - automatyczne przez type-hint
@@ -218,7 +315,7 @@ Działa identycznie. Framework widzi typ, szuka go w kontenerze, wstrzykuje.
 
 ---
 
-## 7. Przepływ requestu
+## 8. Przepływ requestu
 
 ```
 Laravel:
@@ -230,7 +327,7 @@ NestJS:
 
 ---
 
-## 8. Migracje
+## 9. Migracje
 
 ```bash
 # Laravel                                # NestJS (TypeORM)
@@ -255,7 +352,7 @@ Pliki konfiguracyjne:
 
 ---
 
-## 9. Podsumowanie
+## 10. Podsumowanie
 
 | Koncept | Laravel | NestJS |
 |---------|---------|--------|

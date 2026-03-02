@@ -50,14 +50,23 @@ spark_test_project/
 │   │       │   └── dto/
 │   │       │       ├── create-todo.dto.ts
 │   │       │       └── update-todo.dto.ts
-│   │       └── boards/               # Moduł Kanban Board
-│   │           ├── boards.module.ts
-│   │           ├── boards.controller.ts
-│   │           ├── boards.service.ts  # exports: BoardsService
-│   │           ├── entities/board.entity.ts
+│   │       ├── boards/               # Moduł Kanban Board
+│   │       │   ├── boards.module.ts
+│   │       │   ├── boards.controller.ts
+│   │       │   ├── boards.service.ts  # exports: BoardsService
+│   │       │   ├── entities/board.entity.ts  # OneToMany → BoardColumn
+│   │       │   └── dto/
+│   │       │       ├── create-board.dto.ts
+│   │       │       └── update-board.dto.ts
+│   │       └── columns/              # Moduł Kanban Column
+│   │           ├── columns.module.ts  # imports: BoardsModule, exports: ColumnsService
+│   │           ├── columns.controller.ts
+│   │           ├── columns.service.ts # DI: BoardsService
+│   │           ├── entities/board-column.entity.ts  # ManyToOne → Board (CASCADE)
 │   │           └── dto/
-│   │               ├── create-board.dto.ts
-│   │               └── update-board.dto.ts
+│   │               ├── create-column.dto.ts
+│   │               ├── update-column.dto.ts
+│   │               └── reorder-columns.dto.ts
 │   └── web/                          # Next.js 15 frontend
 │       └── src/
 │           ├── app/                   # App Router
@@ -100,6 +109,12 @@ spark_test_project/
 | GET | `/boards/:id` | Szczegóły board |
 | PATCH | `/boards/:id` | Aktualizuj board |
 | DELETE | `/boards/:id` | Usuń board |
+| POST | `/columns` | Utwórz kolumnę (z boardId) |
+| GET | `/boards/:boardId/columns` | Lista kolumn boarda (order ASC) |
+| GET | `/columns/:id` | Szczegóły kolumny |
+| PATCH | `/columns/:id` | Aktualizuj kolumnę |
+| DELETE | `/columns/:id` | Usuń kolumnę |
+| PATCH | `/boards/:boardId/columns/reorder` | Zmień kolejność kolumn |
 
 Swagger docs: `http://localhost:3001/docs`
 

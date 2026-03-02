@@ -99,6 +99,8 @@ describe('BoardsService', () => {
 
       expect(repository.findOne).toHaveBeenCalledWith({
         where: { id: mockBoard.id },
+        relations: ['columns'],
+        order: { columns: { order: 'ASC' } },
       });
       expect(result).toEqual(mockBoard);
     });
