@@ -11,6 +11,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const navItems = [
     { label: 'Home', href: '/' },
     { label: 'Todos', href: '/todos' },
+    { label: 'Boards', href: '/boards' },
   ];
 
   return (

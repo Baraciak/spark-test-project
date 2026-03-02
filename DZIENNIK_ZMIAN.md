@@ -6,6 +6,48 @@ Historia prac nad projektem.
 
 ## 2026-03
 
+### 2026-03-02 (Claude) - Sesja 12
+
+**Temat: Board List Page — strona /boards (feature 008)**
+
+1. **Strona /boards** — `apps/web/src/app/boards/page.tsx`
+   - 'use client', fetchBoards on mount (idle guard), loading/error/success states
+   - Wzorzec analogiczny do todos/page.tsx
+   - Header z gradient text "Kanban Boards"
+
+2. **Komponenty boards** — `apps/web/src/components/boards/`
+   - `BoardForm.tsx` — input name + submit button, dispatch addBoard, disabled during submit
+   - `BoardCard.tsx` — MUI Card z iOS glass effect (rgba, backdrop-filter, subtle borders), Link to /boards/[id], hover effect, staggered animation
+   - `BoardList.tsx` — responsive grid (xs=1, sm=2, md=3), empty state "No boards yet"
+
+3. **Nawigacja**
+   - `AppLayout.tsx` — dodano "Boards" nav item do navItems array
+   - `HomeContent.tsx` — dodano CTA karta "Kanban Boards" obok "Todo App" (grid 2 kolumny)
+
+4. **Testy** — `apps/web/__tests__/BoardList.test.tsx`
+   - 4 testy: empty state, render cards, multiple boards, null description handling
+   - Wszystkie 7 testów web PASS (3 TodoList + 4 BoardList)
+
+5. **Spec-kit artefakty** — `specs/008-board-list-page/{spec,plan,tasks}.md`
+   - Analiza spójności: naprawiono Art. V compliance (PARTIAL — minimal tests)
+
+**Weryfikacja:** Build ✅ `npm run build:web` PASS, Testy ✅ 7/7 PASS (web), API lint ✅ 0 errors, API typecheck ✅ 0 errors
+
+**Pliki nowe:**
+- `apps/web/src/app/boards/page.tsx`
+- `apps/web/src/components/boards/BoardForm.tsx`
+- `apps/web/src/components/boards/BoardCard.tsx`
+- `apps/web/src/components/boards/BoardList.tsx`
+- `apps/web/__tests__/BoardList.test.tsx`
+- `specs/008-board-list-page/plan.md`
+- `specs/008-board-list-page/tasks.md`
+
+**Pliki zmienione:**
+- `apps/web/src/components/layout/AppLayout.tsx` (nav item "Boards")
+- `apps/web/src/app/HomeContent.tsx` (CTA karta "Kanban Boards")
+
+---
+
 ### 2026-03-02 (Claude) - Sesja 11
 
 **Temat: Board Redux State Management (feature 007)**
