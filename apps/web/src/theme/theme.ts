@@ -1,86 +1,80 @@
 'use client';
 
-import { createTheme, alpha } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 
 const GLASS = {
-  bg: 'rgba(255, 255, 255, 0.04)',
-  bgHover: 'rgba(255, 255, 255, 0.08)',
-  bgActive: 'rgba(255, 255, 255, 0.12)',
-  border: 'rgba(255, 255, 255, 0.08)',
-  borderHover: 'rgba(255, 255, 255, 0.15)',
-  blur: 'blur(24px)',
+  bg: 'rgba(255, 255, 255, 0.72)',
+  bgHover: 'rgba(255, 255, 255, 0.82)',
+  bgActive: 'rgba(255, 255, 255, 0.88)',
+  border: 'rgba(0, 0, 0, 0.06)',
+  borderHover: 'rgba(0, 0, 0, 0.1)',
+  blur: 'blur(20px)',
   blurHeavy: 'blur(40px)',
-  shadow: '0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06)',
-  shadowElevated: '0 16px 64px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
+  shadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
+  shadowElevated: '0 8px 32px rgba(0, 0, 0, 0.12)',
 };
 
 const theme = createTheme({
   palette: {
-    mode: 'dark',
+    mode: 'light',
     primary: {
-      main: '#818cf8',
-      light: '#a5b4fc',
-      dark: '#6366f1',
+      main: '#007AFF',
+      light: '#409CFF',
+      dark: '#0056CC',
     },
     secondary: {
-      main: '#22d3ee',
-      light: '#67e8f9',
-      dark: '#06b6d4',
+      main: '#34C759',
+      light: '#6DD98E',
+      dark: '#248A3D',
     },
     background: {
-      default: '#050510',
+      default: '#F2F2F7',
       paper: GLASS.bg,
     },
     text: {
-      primary: 'rgba(255, 255, 255, 0.92)',
-      secondary: 'rgba(255, 255, 255, 0.55)',
+      primary: 'rgba(0, 0, 0, 0.87)',
+      secondary: 'rgba(0, 0, 0, 0.55)',
     },
     divider: GLASS.border,
   },
   typography: {
-    fontFamily: '"DM Sans", "Helvetica Neue", Arial, sans-serif',
+    fontFamily:
+      '"Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif',
     h1: {
-      fontFamily: '"Outfit", "Helvetica Neue", sans-serif',
       fontWeight: 700,
       letterSpacing: '-0.03em',
     },
     h2: {
-      fontFamily: '"Outfit", "Helvetica Neue", sans-serif',
       fontWeight: 600,
       letterSpacing: '-0.02em',
     },
     h3: {
-      fontFamily: '"Outfit", "Helvetica Neue", sans-serif',
       fontWeight: 600,
       letterSpacing: '-0.01em',
     },
     h4: {
-      fontFamily: '"Outfit", "Helvetica Neue", sans-serif',
       fontWeight: 600,
     },
     h5: {
-      fontFamily: '"Outfit", "Helvetica Neue", sans-serif',
       fontWeight: 500,
     },
     h6: {
-      fontFamily: '"Outfit", "Helvetica Neue", sans-serif',
-      fontWeight: 500,
+      fontWeight: 600,
     },
     button: {
-      fontFamily: '"DM Sans", sans-serif',
       fontWeight: 600,
-      letterSpacing: '0.02em',
+      letterSpacing: '0.01em',
       textTransform: 'none' as const,
     },
   },
   shape: {
-    borderRadius: 16,
+    borderRadius: 14,
   },
   components: {
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundAttachment: 'fixed',
+          backgroundColor: '#F2F2F7',
           minHeight: '100vh',
         },
       },
@@ -100,11 +94,12 @@ const theme = createTheme({
     MuiAppBar: {
       styleOverrides: {
         root: {
-          background: 'rgba(5, 5, 16, 0.6)',
+          background: 'rgba(242, 242, 247, 0.72)',
           backdropFilter: GLASS.blurHeavy,
           WebkitBackdropFilter: GLASS.blurHeavy,
           borderBottom: `1px solid ${GLASS.border}`,
-          boxShadow: '0 4px 30px rgba(0, 0, 0, 0.3)',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.06)',
+          color: 'rgba(0, 0, 0, 0.87)',
         },
       },
     },
@@ -130,7 +125,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           '& .MuiOutlinedInput-root': {
-            background: 'rgba(255, 255, 255, 0.03)',
+            background: 'rgba(0, 0, 0, 0.03)',
             backdropFilter: 'blur(12px)',
             WebkitBackdropFilter: 'blur(12px)',
             borderRadius: 12,
@@ -143,15 +138,15 @@ const theme = createTheme({
               borderColor: GLASS.borderHover,
             },
             '&.Mui-focused': {
-              background: 'rgba(255, 255, 255, 0.06)',
+              background: 'rgba(0, 0, 0, 0.02)',
               '& fieldset': {
-                borderColor: alpha('#818cf8', 0.5),
-                borderWidth: 1,
+                borderColor: '#007AFF',
+                borderWidth: 2,
               },
             },
           },
           '& .MuiInputLabel-root': {
-            color: 'rgba(255, 255, 255, 0.4)',
+            color: 'rgba(0, 0, 0, 0.4)',
           },
         },
       },
@@ -164,11 +159,11 @@ const theme = createTheme({
           transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
         },
         contained: {
-          background: 'linear-gradient(135deg, #6366f1 0%, #818cf8 50%, #06b6d4 100%)',
-          boxShadow: '0 4px 20px rgba(99, 102, 241, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+          background: '#007AFF',
+          boxShadow: '0 2px 8px rgba(0, 122, 255, 0.25)',
           '&:hover': {
-            background: 'linear-gradient(135deg, #7c7ff7 0%, #9ba3fc 50%, #22d3ee 100%)',
-            boxShadow: '0 8px 32px rgba(99, 102, 241, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+            background: '#0056CC',
+            boxShadow: '0 4px 16px rgba(0, 122, 255, 0.35)',
             transform: 'translateY(-1px)',
           },
           '&:active': {
@@ -189,10 +184,10 @@ const theme = createTheme({
     MuiCheckbox: {
       styleOverrides: {
         root: {
-          color: 'rgba(255, 255, 255, 0.25)',
+          color: 'rgba(0, 0, 0, 0.2)',
           transition: 'all 0.2s ease',
           '&.Mui-checked': {
-            color: '#818cf8',
+            color: '#007AFF',
           },
         },
       },
@@ -202,7 +197,7 @@ const theme = createTheme({
         root: {
           transition: 'all 0.2s ease',
           '&:hover': {
-            background: 'rgba(255, 255, 255, 0.08)',
+            background: 'rgba(0, 0, 0, 0.05)',
           },
         },
       },
@@ -210,10 +205,11 @@ const theme = createTheme({
     MuiTooltip: {
       styleOverrides: {
         tooltip: {
-          background: 'rgba(15, 15, 30, 0.9)',
+          background: 'rgba(0, 0, 0, 0.75)',
           backdropFilter: 'blur(16px)',
-          border: `1px solid ${GLASS.border}`,
+          border: `1px solid rgba(255, 255, 255, 0.1)`,
           borderRadius: 8,
+          color: '#fff',
         },
       },
     },

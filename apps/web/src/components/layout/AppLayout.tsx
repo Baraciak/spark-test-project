@@ -25,14 +25,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           }}
         >
           <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}>
-            <AutoAwesomeIcon sx={{ color: '#818cf8', fontSize: 24 }} />
+            <AutoAwesomeIcon sx={{ color: '#007AFF', fontSize: 24 }} />
             <Typography
               variant="h6"
               sx={{
-                fontFamily: '"Outfit", sans-serif',
                 fontWeight: 700,
                 letterSpacing: '-0.02em',
-                background: 'linear-gradient(135deg, #a5b4fc, #22d3ee)',
+                background: 'linear-gradient(135deg, #007AFF, #5856D6)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
               }}
@@ -53,18 +52,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   href={item.href}
                   size="small"
                   sx={{
-                    color: isActive ? '#a5b4fc' : 'rgba(255,255,255,0.5)',
+                    color: isActive ? '#007AFF' : 'rgba(0,0,0,0.5)',
                     fontSize: '0.85rem',
-                    fontWeight: 500,
+                    fontWeight: isActive ? 600 : 500,
                     px: 2,
                     py: 0.75,
                     borderRadius: 2,
                     position: 'relative',
-                    background: isActive ? 'rgba(129, 140, 248, 0.08)' : 'transparent',
+                    background: isActive ? 'rgba(0, 122, 255, 0.08)' : 'transparent',
                     transition: 'all 0.25s ease',
                     '&:hover': {
-                      color: '#a5b4fc',
-                      background: 'rgba(129, 140, 248, 0.1)',
+                      color: '#007AFF',
+                      background: 'rgba(0, 122, 255, 0.06)',
                     },
                   }}
                 >
