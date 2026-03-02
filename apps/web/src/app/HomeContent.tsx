@@ -54,16 +54,23 @@ export default function HomeContent() {
         </Typography>
       </Box>
 
-      {/* CTA Card */}
-      <Box sx={{ display: 'flex', justifyContent: 'center', mb: 8 }}>
+      {/* CTA Cards */}
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' },
+          gap: 2,
+          maxWidth: 720,
+          mx: 'auto',
+          mb: 8,
+        }}
+      >
         <Card
           component={Link}
           href="/todos"
           className="animate-in"
           sx={{
             textDecoration: 'none',
-            width: '100%',
-            maxWidth: 480,
             cursor: 'pointer',
             animationDelay: '0.15s',
             background: 'linear-gradient(135deg, rgba(0, 122, 255, 0.08) 0%, rgba(88, 86, 214, 0.06) 100%)',
@@ -71,7 +78,7 @@ export default function HomeContent() {
             '&:hover': {
               background: 'linear-gradient(135deg, rgba(0, 122, 255, 0.12) 0%, rgba(88, 86, 214, 0.08) 100%)',
               border: '1px solid rgba(0, 122, 255, 0.2)',
-              '& .arrow': { transform: 'translateX(4px)' },
+              '& .arrow-todo': { transform: 'translateX(4px)' },
             },
           }}
         >
@@ -85,8 +92,41 @@ export default function HomeContent() {
               </Typography>
             </Box>
             <ArrowForwardIcon
-              className="arrow"
+              className="arrow-todo"
               sx={{ color: '#007AFF', fontSize: 28, transition: 'transform 0.25s ease' }}
+            />
+          </CardContent>
+        </Card>
+
+        <Card
+          component={Link}
+          href="/boards"
+          className="animate-in"
+          sx={{
+            textDecoration: 'none',
+            cursor: 'pointer',
+            animationDelay: '0.2s',
+            background: 'linear-gradient(135deg, rgba(88, 86, 214, 0.08) 0%, rgba(0, 122, 255, 0.06) 100%)',
+            border: '1px solid rgba(88, 86, 214, 0.12)',
+            '&:hover': {
+              background: 'linear-gradient(135deg, rgba(88, 86, 214, 0.12) 0%, rgba(0, 122, 255, 0.08) 100%)',
+              border: '1px solid rgba(88, 86, 214, 0.2)',
+              '& .arrow-boards': { transform: 'translateX(4px)' },
+            },
+          }}
+        >
+          <CardContent sx={{ p: 4, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Box>
+              <Typography variant="h5" sx={{ fontWeight: 600, mb: 0.5, color: 'rgba(0,0,0,0.87)' }}>
+                Kanban Boards
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'rgba(0,0,0,0.5)' }}>
+                Organize tasks with drag & drop boards
+              </Typography>
+            </Box>
+            <ArrowForwardIcon
+              className="arrow-boards"
+              sx={{ color: '#5856D6', fontSize: 28, transition: 'transform 0.25s ease' }}
             />
           </CardContent>
         </Card>

@@ -87,11 +87,13 @@ spark_test_project/
 │       └── src/
 │           ├── app/                   # App Router
 │           │   ├── layout.tsx, page.tsx, providers.tsx
-│           │   ├── HomeContent.tsx    # Główny widok strony
-│           │   └── todos/page.tsx     # Strona /todos
+│           │   ├── HomeContent.tsx    # Główny widok strony + CTA karty
+│           │   ├── todos/page.tsx     # Strona /todos
+│           │   └── boards/page.tsx    # Strona /boards (lista tablic)
 │           ├── components/
-│           │   ├── layout/AppLayout.tsx
-│           │   └── todos/            # TodoForm, TodoList, TodoItem
+│           │   ├── layout/AppLayout.tsx  # Navbar: Home, Todos, Boards
+│           │   ├── todos/            # TodoForm, TodoList, TodoItem
+│           │   └── boards/           # BoardForm, BoardList, BoardCard
 │           ├── store/                # Redux Toolkit
 │           │   ├── store.ts
 │           │   ├── hooks.ts          # useAppDispatch, useAppSelector
@@ -266,4 +268,5 @@ Konstytucja: `.specify/memory/constitution.md`
 - TypeScript 5.7 / Node.js 22
 
 ## Recent Changes
+- 008-board-list-page: Added /boards page with BoardForm, BoardList, BoardCard + nav updates
 - 007-board-redux-state: Added boardsSlice with boards/columns/tasks state management
