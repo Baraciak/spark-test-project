@@ -10,3 +10,8 @@ coverage
 .DS_Store
 .idea
 .vscode
+
+# spec-kit (dev tooling, not needed in images)
+.specify/
+.claude/
+specs/
