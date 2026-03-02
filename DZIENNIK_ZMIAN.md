@@ -6,6 +6,40 @@ Historia prac nad projektem.
 
 ## 2026-03
 
+### 2026-03-02 (Claude) - Sesja 10
+
+**Temat: Frontend Types + API Service Layer (feature 006)**
+
+1. **TypeScript interfaces** — `apps/web/src/types/board.ts`
+   - Board: id, name, description (nullable), columns, createdAt, updatedAt
+   - BoardColumn: id, name, order, boardId, tasks, createdAt, updatedAt
+   - Task: id, title, description (nullable), order, columnId, createdAt, updatedAt
+   - 8 DTO interfaces: CreateBoardDto, UpdateBoardDto, CreateColumnDto, UpdateColumnDto, CreateTaskDto, UpdateTaskDto, MoveTaskDto, ReorderColumnsDto
+
+2. **API Service Layer** — rozszerzenie `apps/web/src/services/api.ts`
+   - boardsApi: getAll, getOne, create, update, remove (5 metod)
+   - columnsApi: getByBoard, getOne, create, update, remove, reorder (6 metod)
+   - tasksApi: getByColumn, getOne, create, update, remove, move (6 metod)
+   - Wzorzec spójny z istniejącym todosApi (`.then(res => res.data)`)
+
+3. **Spec-kit artefakty** — pełny workflow SDD z analizą spójności
+   - `specs/006-board-types-api/{spec,plan,tasks}.md`
+   - Analiza spójności: naprawiono FR-005 (brak getOne), FR-008 (brak 2 DTO)
+
+**Weryfikacja:** Build ✅ `npm run build:web` PASS, Testy ✅ 3/3 PASS (web), API lint ✅ 0 errors, Typecheck ✅ 0 errors
+
+**Pliki nowe:**
+- `apps/web/src/types/board.ts`
+- `specs/006-board-types-api/plan.md`
+- `specs/006-board-types-api/tasks.md`
+
+**Pliki zmienione:**
+- `apps/web/src/services/api.ts` (boardsApi, columnsApi, tasksApi)
+- `specs/006-board-types-api/spec.md` (FR-005 + FR-008 fixes)
+- `CLAUDE.md` (struktura: types/board.ts, api.ts description)
+
+---
+
 ### 2026-03-02 (Claude) - Sesja 9
 
 **Temat: API Smoke Tests — E2E testy dla wszystkich endpointów (feature 005)**

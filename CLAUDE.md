@@ -96,8 +96,9 @@ spark_test_project/
 │           │   ├── store.ts
 │           │   ├── hooks.ts          # useAppDispatch, useAppSelector
 │           │   └── todosSlice.ts     # async thunks
-│           ├── services/api.ts       # Axios client
+│           ├── services/api.ts       # Axios client (todosApi, boardsApi, columnsApi, tasksApi)
 │           ├── types/todo.ts
+│           ├── types/board.ts        # Board, BoardColumn, Task + DTO interfaces
 │           └── theme/theme.ts        # MUI iOS light theme
 ├── docker-compose.yml                # Production
 ├── docker-compose.dev.yml            # Dev z hot-reload

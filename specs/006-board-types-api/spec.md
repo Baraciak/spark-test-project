@@ -54,10 +54,10 @@ Jako frontend developer chcę rozszerzenie istniejącego api.ts o `boardsApi`, `
 - **FR-002**: Board: id, name, description (string | null), columns (BoardColumn[]), createdAt, updatedAt
 - **FR-003**: BoardColumn: id, name, order, boardId, tasks (Task[]), createdAt, updatedAt
 - **FR-004**: Task: id, title, description (string | null), order, columnId, createdAt, updatedAt
-- **FR-005**: Rozszerzenie `services/api.ts` o boardsApi (getAll, getOne, create, update, remove), columnsApi (getByBoard, create, update, remove, reorder), tasksApi (getByColumn, create, update, remove, move)
+- **FR-005**: Rozszerzenie `services/api.ts` o boardsApi (getAll, getOne, create, update, remove), columnsApi (getByBoard, getOne, create, update, remove, reorder), tasksApi (getByColumn, getOne, create, update, remove, move)
 - **FR-006**: Istniejący todosApi MUSI pozostać bez zmian
 - **FR-007**: Wzorzec API: `.then((res) => res.data)` — spójny z istniejącym todosApi
-- **FR-008**: DTO typy pomocnicze: CreateBoardDto, UpdateBoardDto, CreateColumnDto, CreateTaskDto, UpdateTaskDto, MoveTaskDto
+- **FR-008**: DTO typy pomocnicze: CreateBoardDto, UpdateBoardDto, CreateColumnDto, UpdateColumnDto, CreateTaskDto, UpdateTaskDto, MoveTaskDto, ReorderColumnsDto
 
 ### Key Entities
 
