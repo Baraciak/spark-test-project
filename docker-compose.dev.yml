@@ -9,7 +9,7 @@ services:
       dockerfile: apps/api/Dockerfile
       target: deps
     working_dir: /app/apps/api
-    command: npx nest start --watch
+    command: sh -c "rm -rf dist tsconfig.build.tsbuildinfo && npx nest start --watch"
     ports:
       - "3001:3001"
       - "9229:9229"
