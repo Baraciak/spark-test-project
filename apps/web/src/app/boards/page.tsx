@@ -10,13 +10,13 @@ import { fetchBoards } from '@/store/boardsSlice';
 
 export default function BoardsPage() {
   const dispatch = useAppDispatch();
-  const { status, error } = useAppSelector((state) => state.boards);
+  const { listStatus, error } = useAppSelector((state) => state.boards);
 
   useEffect(() => {
-    if (status === 'idle') {
+    if (listStatus === 'idle') {
       dispatch(fetchBoards());
     }
-  }, [dispatch, status]);
+  }, [dispatch, listStatus]);
 
   return (
     <AppLayout>
@@ -54,13 +54,13 @@ export default function BoardsPage() {
         </Paper>
 
         {/* Content */}
-        {status === 'loading' && (
+        {listStatus === 'loading' && (
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
             <CircularProgress size={28} sx={{ color: '#007AFF' }} />
           </Box>
         )}
 
-        {status === 'failed' && (
+        {listStatus === 'failed' && (
           <Box
             sx={{
               textAlign: 'center',
@@ -77,7 +77,7 @@ export default function BoardsPage() {
           </Box>
         )}
 
-        {status === 'succeeded' && <BoardList />}
+        {listStatus === 'succeeded' && <BoardList />}
       </Box>
     </AppLayout>
   );

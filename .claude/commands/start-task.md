@@ -26,6 +26,7 @@ Sprawdź co użytkownik podał w `$ARGUMENTS`:
   gh issue view <number> --json title,body,labels
   ```
   Użyj tytułu i opisu jako feature description.
+  Jeśli issue ma label `bug` → traktuj jako bug fix (patrz Krok 0.3).
 
 - **Jeśli tekstowy opis**: Użyj go bezpośrednio jako feature description.
 
@@ -39,7 +40,7 @@ Sprawdź czy jest aktywna feature branch:
 git rev-parse --abbrev-ref HEAD
 ```
 
-Jeśli branch pasuje do `[0-9]{3}-*`, sprawdź istniejące artefakty:
+Jeśli branch pasuje do `[0-9]{3}-*` lub `fix/*`, sprawdź istniejące artefakty:
 
 ```bash
 .specify/scripts/bash/check-prerequisites.sh --paths-only --json
@@ -61,6 +62,27 @@ Od której fazy wznowić?
 
 Jeśli na `main` — kontynuuj do Fazy 1.
 
+### Krok 0.3: Klasyfikacja typu zadania (feature vs fix)
+
+Określ typ na podstawie opisu:
+- **Bug fix** — opis zawiera słowa: "fix", "bug", "napraw", "nie działa", "broken", "błąd", "problem", "regression" lub issue ma label `bug`
+- **Feature** — wszystko inne
+
+**Dla bug fix**:
+- Branch: `fix/NN-short-name` (np. `fix/01-fix-boards-fetch`)
+- Spec dir: `specs/fix/NN-short-name/`
+- Numer NN: kolejny w `specs/fix/` (01, 02, 03...)
+- Utwórz ręcznie (bez `create-new-feature.sh`):
+  ```bash
+  git checkout -b fix/NN-short-name
+  mkdir -p specs/fix/NN-short-name
+  ```
+
+**Dla feature**:
+- Branch: `NNN-short-name` (np. `010-kanban-board`)
+- Spec dir: `specs/NNN-short-name/`
+- Użyj `create-new-feature.sh` jak dotychczas
+
 ## FAZA 1: SPECYFIKACJA
 
 Poinformuj użytkownika:
@@ -75,9 +97,8 @@ Wykonaj pełny workflow z `/speckit.specify`:
 1. Wygeneruj short-name z opisu (2-4 słowa)
 2. Sprawdź istniejące branche i numery
 3. Utwórz branch i spec dir:
-   ```bash
-   .specify/scripts/bash/create-new-feature.sh --json --short-name "<short-name>" --number <N> "<feature description>"
-   ```
+   - **Feature**: `create-new-feature.sh --json --short-name "<short-name>" --number <N> "<description>"`
+   - **Bug fix**: Ręcznie `git checkout -b fix/NN-short-name && mkdir -p specs/fix/NN-short-name`
 4. Załaduj `.specify/templates/spec-template.md`
 5. Przeanalizuj istniejący kod projektu:
    - `apps/api/src/` — moduły NestJS

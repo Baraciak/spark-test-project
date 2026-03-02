@@ -6,6 +6,37 @@ Historia prac nad projektem.
 
 ## 2026-03
 
+### 2026-03-02 (Claude) - Sesja 14
+
+**Temat: Fix — boards list nie ładuje się po nawigacji z /boards/[id] (fix/01)**
+
+1. **Root cause** — `fetchBoards` i `fetchBoard` współdzieliły jedno pole `status` w `BoardsState`
+   - Po `fetchBoard` na stronie `/boards/[id]`, status ustawiał się na `'succeeded'`
+   - Strona `/boards` sprawdzała `status === 'idle'` → warunek FALSE → `fetchBoards()` nigdy nie wywołane
+   - Rezultat: pusty grid na `/boards` po powrocie z detalu
+
+2. **Fix** — rozdzielenie `status` na dwa niezależne pola
+   - `listStatus` — śledzi stan `fetchBoards` (strona `/boards`)
+   - `activeBoardStatus` — śledzi stan `fetchBoard` (strona `/boards/[id]`)
+
+3. **Aktualizacja /start-task** — dodano pattern `fix/` dla bug fixów
+   - Branch: `fix/NN-short-name` zamiast `NNN-short-name`
+   - Spec dir: `specs/fix/NN-short-name/`
+   - Automatyczna klasyfikacja typu (feature vs fix) na podstawie opisu
+
+**Weryfikacja:** Testy ✅ 237/237 PASS (207 API + 30 web), Lint ✅ 0 errors, Typecheck ✅ 0 errors
+
+**Pliki zmienione:**
+- `apps/web/src/store/boardsSlice.ts` (split status → listStatus + activeBoardStatus)
+- `apps/web/src/app/boards/page.tsx` (use listStatus)
+- `apps/web/src/app/boards/[id]/page.tsx` (use activeBoardStatus)
+- `.claude/commands/start-task.md` (fix/ pattern support)
+
+**Pliki nowe:**
+- `specs/fix/01-fix-boards-fetch/{spec,tasks}.md`
+
+---
+
 ### 2026-03-02 (Claude) - Sesja 13
 
 **Temat: Kanban Board View — strona /boards/[id] (feature 009)**

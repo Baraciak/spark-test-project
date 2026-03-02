@@ -14,7 +14,7 @@ export default function BoardViewPage() {
   const params = useParams();
   const boardId = params.id as string;
   const dispatch = useAppDispatch();
-  const { activeBoard, status, error } = useAppSelector((state) => state.boards);
+  const { activeBoard, activeBoardStatus, error } = useAppSelector((state) => state.boards);
 
   useEffect(() => {
     if (boardId) {
@@ -25,13 +25,13 @@ export default function BoardViewPage() {
   return (
     <AppLayout>
       <Box sx={{ maxWidth: 1400, mx: 'auto', pt: { xs: 1, md: 2 }, px: { xs: 1, md: 2 } }}>
-        {status === 'loading' && (
+        {activeBoardStatus === 'loading' && (
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
             <CircularProgress size={28} sx={{ color: '#007AFF' }} />
           </Box>
         )}
 
-        {status === 'failed' && (
+        {activeBoardStatus === 'failed' && (
           <Box
             sx={{
               textAlign: 'center',
@@ -57,7 +57,7 @@ export default function BoardViewPage() {
           </Box>
         )}
 
-        {status === 'succeeded' && activeBoard && (
+        {activeBoardStatus === 'succeeded' && activeBoard && (
           <KanbanBoard board={activeBoard} />
         )}
       </Box>

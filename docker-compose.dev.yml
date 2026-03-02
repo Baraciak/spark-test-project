@@ -46,4 +46,5 @@ services:
       - ./apps/web/postcss.config.mjs:/app/apps/web/postcss.config.mjs:delegated
       - ./apps/web/public:/app/apps/web/public:delegated
     environment:
+      WATCHPACK_POLLING: "true"
       BACKEND_URL: http://api:3001

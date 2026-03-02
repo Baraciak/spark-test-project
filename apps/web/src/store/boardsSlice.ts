@@ -15,14 +15,16 @@ import { boardsApi, columnsApi, tasksApi } from '@/services/api';
 export interface BoardsState {
   items: Board[];
   activeBoard: Board | null;
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  listStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
+  activeBoardStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
 
 const initialState: BoardsState = {
   items: [],
   activeBoard: null,
-  status: 'idle',
+  listStatus: 'idle',
+  activeBoardStatus: 'idle',
   error: null,
 };
 
@@ -169,26 +171,26 @@ const boardsSlice = createSlice({
     builder
       // fetchBoards
       .addCase(fetchBoards.pending, (state) => {
-        state.status = 'loading';
+        state.listStatus = 'loading';
       })
       .addCase(fetchBoards.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.listStatus = 'succeeded';
         state.items = action.payload;
       })
       .addCase(fetchBoards.rejected, (state, action) => {
-        state.status = 'failed';
+        state.listStatus = 'failed';
         state.error = action.error.message || 'Failed to fetch boards';
       })
       // fetchBoard
       .addCase(fetchBoard.pending, (state) => {
-        state.status = 'loading';
+        state.activeBoardStatus = 'loading';
       })
       .addCase(fetchBoard.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.activeBoardStatus = 'succeeded';
         state.activeBoard = action.payload;
       })
       .addCase(fetchBoard.rejected, (state, action) => {
-        state.status = 'failed';
+        state.activeBoardStatus = 'failed';
         state.error = action.error.message || 'Failed to fetch board';
       })
       // addBoard
