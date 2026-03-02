@@ -24,9 +24,7 @@
 
 ## Aktualne blokery / Znane problemy
 
-| Problem | Opis | Wpływ | Obejście |
-|---------|------|-------|----------|
-| synchronize: true | TypeORM auto-sync włączony | Niebezpieczne na produkcji | Docelowo migracje |
+Brak znanych blokerów.
 
 ---
 
@@ -39,6 +37,8 @@ spark_test_project/
 │   │   └── src/
 │   │       ├── main.ts               # CORS, ValidationPipe, Swagger
 │   │       ├── app.module.ts          # TypeORM config, moduły
+│   │       ├── data-source.ts         # TypeORM CLI DataSource (migracje)
+│   │       ├── migrations/            # Migracje bazy danych
 │   │       └── todos/                 # Moduł CRUD
 │   │           ├── todos.module.ts
 │   │           ├── todos.controller.ts
@@ -62,7 +62,7 @@ spark_test_project/
 │           │   └── todosSlice.ts     # async thunks
 │           ├── services/api.ts       # Axios client
 │           ├── types/todo.ts
-│           └── theme/theme.ts        # MUI dark theme
+│           └── theme/theme.ts        # MUI iOS light theme
 ├── docker-compose.yml                # Production
 ├── docker-compose.dev.yml            # Dev z hot-reload
 ├── .github/workflows/ci.yml         # GitHub Actions
@@ -134,6 +134,12 @@ npm run lint --workspaces --if-present
 
 # NestJS CLI (generowanie)
 npx nest generate resource nazwa --no-spec   # W apps/api/
+
+# Migracje (w apps/api/)
+npm run migration:generate -- src/migrations/NazwaMigracji   # Generuj z diff entity vs DB
+npm run migration:run                                         # Uruchom pending migracje
+npm run migration:revert                                      # Cofnij ostatnią migrację
+npm run migration:show                                        # Pokaż status migracji
 ```
 
 ---
@@ -144,6 +150,7 @@ npx nest generate resource nazwa --no-spec   # W apps/api/
 - **Moduł** = Controller + Service + Entity + DTO
 - **Walidacja** = class-validator w DTO + globalny ValidationPipe (whitelist, transform)
 - **Entity** = TypeORM z UUID PK, CreateDateColumn, UpdateDateColumn
+- **Migracje** = TypeORM migrations (synchronize: false, migrationsRun: true)
 - **Wyjątki** = wbudowane NestJS (NotFoundException, BadRequestException)
 
 ### Frontend (Next.js)
@@ -159,7 +166,7 @@ npx nest generate resource nazwa --no-spec   # W apps/api/
 ### Architektura
 - **NIE** umieszczaj logiki biznesowej w kontrolerach
 - **NIE** importuj bezpośrednio między `apps/api` i `apps/web`
-- **NIE** używaj `synchronize: true` na produkcji
+- **NIE** używaj `synchronize: true` - używaj migracji (`migration:generate`)
 
 ### Kod
 - **NIE** używaj `any` - typuj prawidłowo

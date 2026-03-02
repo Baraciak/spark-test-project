@@ -23,6 +23,7 @@ spark_test_project/
 │   ├── web/          # Next.js frontend (port 3000)
 │   └── api/          # NestJS backend  (port 3001)
 ├── packages/         # Shared libs (future)
+├── docs/             # Documentation (cheatsheets, guides)
 ├── docker-compose.yml
 └── docker-compose.dev.yml
 ```
@@ -80,6 +81,10 @@ npm run docker:down
 | `npm run docker:dev` | Docker dev with hot-reload |
 | `npm run docker:prod` | Docker production build |
 | `npm run docker:down` | Stop Docker containers |
+| `npm run migration:generate -- src/migrations/Name` | Generate migration from entity diff (in `apps/api/`) |
+| `npm run migration:run` | Run pending migrations (in `apps/api/`) |
+| `npm run migration:revert` | Revert last migration (in `apps/api/`) |
+| `npm run migration:show` | Show migration status (in `apps/api/`) |
 
 ## API Endpoints
 

@@ -6,6 +6,40 @@ Historia prac nad projektem.
 
 ## 2026-03
 
+### 2026-03-02 (Claude) - Sesja 4
+
+**Temat: TypeORM Migracje + NestJS Cheatsheet**
+
+1. **TypeORM Migrations** - zastąpienie `synchronize: true` migracjami
+   - `data-source.ts` - standalone DataSource dla TypeORM CLI
+   - `InitialSchema` - pierwsza migracja (CREATE TABLE IF NOT EXISTS todos)
+   - `app.module.ts` - `synchronize: false`, `migrationsRun: true`
+   - Skrypty npm: `migration:generate`, `migration:run`, `migration:revert`, `migration:show`
+   - Dodano `tsconfig-paths` do devDependencies
+
+2. **NestJS vs Laravel Cheatsheet** - `docs/NESTJS_LARAVEL_CHEATSHEET.md`
+   - Porównanie 1:1: Moduł/ServiceProvider, Entity/Model, DTO/FormRequest
+   - Controller, Service, DI, przepływ requestu, migracje
+   - Tabela podsumowująca wszystkie koncepty
+
+3. **Aktualizacja dokumentacji**
+   - `CLAUDE.md` - usunięto bloker synchronize, dodano migracje do struktury/komend/wzorców
+   - `README.md` - dodano komendy migracji do Scripts, `docs/` do struktury
+
+**Pliki nowe:**
+- `apps/api/src/data-source.ts`
+- `apps/api/src/migrations/1772472188750-InitialSchema.ts`
+- `docs/NESTJS_LARAVEL_CHEATSHEET.md`
+
+**Pliki zmienione:**
+- `apps/api/src/app.module.ts` (synchronize: false, migrationsRun: true)
+- `apps/api/package.json` (skrypty migracji, tsconfig-paths)
+- `CLAUDE.md` (migracje, usunięty bloker)
+- `README.md` (komendy migracji, docs/)
+- `DZIENNIK_ZMIAN.md` (ten wpis)
+
+---
+
 ### 2026-03-02 (Claude) - Sesja 3
 
 **Temat: Instalacja Spec-Kit (Spec-Driven Development)**
