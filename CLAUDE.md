@@ -175,6 +175,7 @@ npm run build:web
 npm test                 # Wszystkie workspace'y
 npm test -w apps/api     # Tylko backend
 npm test -w apps/web     # Tylko frontend
+npm test -w apps/api -- --testPathPattern=tasks  # Tylko testy danego modułu
 
 # Lint
 npm run lint --workspaces --if-present
@@ -251,3 +252,9 @@ Komendy szczegółowe (jeśli chcesz uruchamiać ręcznie):
 
 Artefakty: `.specify/specs/{###-feature}/`
 Konstytucja: `.specify/memory/constitution.md`
+
+## Active Technologies
+- TypeScript 5.7 / Node.js 22 (005-api-smoke-test)
+
+## Recent Changes
+- 005-api-smoke-test: Added TypeScript 5.7 / Node.js 22
