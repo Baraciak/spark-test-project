@@ -20,19 +20,19 @@ export default function TodoList() {
         <InboxIcon
           sx={{
             fontSize: 48,
-            color: 'rgba(255,255,255,0.1)',
+            color: 'rgba(0,0,0,0.1)',
             mb: 2,
           }}
         />
         <Typography
           variant="body1"
-          sx={{ color: 'rgba(255,255,255,0.3)', fontWeight: 500 }}
+          sx={{ color: 'rgba(0,0,0,0.35)', fontWeight: 500 }}
         >
           No todos yet
         </Typography>
         <Typography
           variant="body2"
-          sx={{ color: 'rgba(255,255,255,0.2)', mt: 0.5 }}
+          sx={{ color: 'rgba(0,0,0,0.25)', mt: 0.5 }}
         >
           Add one above to get started
         </Typography>

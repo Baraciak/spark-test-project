@@ -126,3 +126,69 @@ npm test --workspace=apps/web
 # E2E tests (backend)
 npm run test:e2e --workspace=apps/api
 ```
+
+## Development Workflow (Spec-Driven Development)
+
+This project uses [GitHub Spec Kit](https://github.com/github/spec-kit) for structured feature development with AI assistance.
+
+### Prerequisites
+
+- [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code) installed
+
+### Adding a New Feature
+
+Open Claude Code in the project root and run:
+
+```
+/start-task "Short description of the feature"
+```
+
+Claude will guide you through 4 phases:
+
+```
+PHASE 1: SPECIFICATION  → Analyzes codebase, creates spec.md, asks for approval
+PHASE 2: PLANNING       → Creates plan.md + tasks.md with tech details
+PHASE 3: IMPLEMENTATION → Implements tasks one by one, runs tests
+PHASE 4: FINALIZATION   → Updates docs, prepares for commit
+```
+
+Each phase pauses for your review before proceeding.
+
+### Manual Commands (step by step)
+
+If you prefer running each step individually:
+
+| Command | What it does |
+|---|---|
+| `/speckit.specify "desc"` | Create feature spec (branch + `spec.md`) |
+| `/speckit.clarify` | Clarify ambiguities in spec |
+| `/speckit.plan` | Generate technical plan (`plan.md`) |
+| `/speckit.tasks` | Generate task list (`tasks.md`) |
+| `/speckit.implement` | Implement all tasks |
+| `/speckit.checklist` | Quality checklist |
+| `/speckit.analyze` | Cross-artifact consistency check |
+| `/speckit.taskstoissues` | Export tasks to GitHub Issues |
+
+### Resuming Work
+
+If you stopped mid-feature, just run `/start-task` again on the same branch. Claude detects existing artifacts and asks which phase to resume from.
+
+### Feature Artifacts
+
+Each feature generates a spec directory:
+
+```
+specs/001-feature-name/
+├── spec.md           # What to build (requirements, acceptance criteria)
+├── plan.md           # How to build it (architecture, tech decisions)
+├── data-model.md     # Entity definitions
+├── tasks.md          # Task checklist (source of truth)
+└── contracts/        # API contracts
+```
+
+### Project Conventions
+
+- Branch naming: `001-feature-name`, `002-another-feature` (auto-incremented)
+- Constitution: `.specify/memory/constitution.md` (project rules enforced during planning)
+- Change log: `DZIENNIK_ZMIAN.md` (updated after each session)
+- `tasks.md` is the source of truth for task tracking

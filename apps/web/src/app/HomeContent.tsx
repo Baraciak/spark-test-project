@@ -32,7 +32,7 @@ export default function HomeContent() {
             fontSize: { xs: '2.5rem', md: '4rem' },
             lineHeight: 1.1,
             mb: 2,
-            background: 'linear-gradient(135deg, #e0e7ff 0%, #a5b4fc 30%, #818cf8 60%, #22d3ee 100%)',
+            background: 'linear-gradient(135deg, #1C1C1E 0%, #007AFF 50%, #5856D6 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
           }}
@@ -43,7 +43,7 @@ export default function HomeContent() {
           variant="h5"
           className="animate-in"
           sx={{
-            color: 'rgba(255,255,255,0.45)',
+            color: 'rgba(0,0,0,0.45)',
             fontWeight: 400,
             maxWidth: 500,
             mx: 'auto',
@@ -66,27 +66,27 @@ export default function HomeContent() {
             maxWidth: 480,
             cursor: 'pointer',
             animationDelay: '0.15s',
-            background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(6, 182, 212, 0.08) 100%)',
-            border: '1px solid rgba(129, 140, 248, 0.2)',
+            background: 'linear-gradient(135deg, rgba(0, 122, 255, 0.08) 0%, rgba(88, 86, 214, 0.06) 100%)',
+            border: '1px solid rgba(0, 122, 255, 0.12)',
             '&:hover': {
-              background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.18) 0%, rgba(6, 182, 212, 0.12) 100%)',
-              border: '1px solid rgba(129, 140, 248, 0.3)',
+              background: 'linear-gradient(135deg, rgba(0, 122, 255, 0.12) 0%, rgba(88, 86, 214, 0.08) 100%)',
+              border: '1px solid rgba(0, 122, 255, 0.2)',
               '& .arrow': { transform: 'translateX(4px)' },
             },
           }}
         >
           <CardContent sx={{ p: 4, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box>
-              <Typography variant="h5" sx={{ fontWeight: 600, mb: 0.5 }}>
+              <Typography variant="h5" sx={{ fontWeight: 600, mb: 0.5, color: 'rgba(0,0,0,0.87)' }}>
                 Todo App
               </Typography>
-              <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.5)' }}>
+              <Typography variant="body2" sx={{ color: 'rgba(0,0,0,0.5)' }}>
                 Full CRUD with Redux Toolkit + NestJS API
               </Typography>
             </Box>
             <ArrowForwardIcon
               className="arrow"
-              sx={{ color: '#818cf8', fontSize: 28, transition: 'transform 0.25s ease' }}
+              sx={{ color: '#007AFF', fontSize: 28, transition: 'transform 0.25s ease' }}
             />
           </CardContent>
         </Card>
@@ -98,7 +98,7 @@ export default function HomeContent() {
           variant="overline"
           className="animate-in"
           sx={{
-            color: 'rgba(255,255,255,0.35)',
+            color: 'rgba(0,0,0,0.35)',
             letterSpacing: '0.15em',
             fontSize: '0.7rem',
             display: 'block',
@@ -124,7 +124,7 @@ export default function HomeContent() {
               sx={{
                 animationDelay: `${0.25 + i * 0.05}s`,
                 '&:hover': {
-                  '& .tech-icon': { color: '#818cf8' },
+                  '& .tech-icon': { color: '#007AFF' },
                 },
               }}
             >
@@ -132,7 +132,7 @@ export default function HomeContent() {
                 <Box
                   className="tech-icon"
                   sx={{
-                    color: 'rgba(255,255,255,0.2)',
+                    color: 'rgba(0,0,0,0.2)',
                     mb: 1.5,
                     transition: 'color 0.25s ease',
                     '& svg': { fontSize: 28 },
@@ -142,13 +142,13 @@ export default function HomeContent() {
                 </Box>
                 <Typography
                   variant="body2"
-                  sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 0.25 }}
+                  sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 0.25, color: 'rgba(0,0,0,0.87)' }}
                 >
                   {tech.name}
                 </Typography>
                 <Typography
                   variant="caption"
-                  sx={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.7rem' }}
+                  sx={{ color: 'rgba(0,0,0,0.4)', fontSize: '0.7rem' }}
                 >
                   {tech.desc}
                 </Typography>

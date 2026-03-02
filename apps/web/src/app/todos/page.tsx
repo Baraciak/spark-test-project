@@ -25,7 +25,7 @@ export default function TodosPage() {
             variant="h2"
             sx={{
               fontSize: { xs: '1.75rem', md: '2.25rem' },
-              background: 'linear-gradient(135deg, #e0e7ff, #818cf8)',
+              background: 'linear-gradient(135deg, #1C1C1E, #007AFF)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               mb: 0.5,
@@ -33,7 +33,7 @@ export default function TodosPage() {
           >
             Todo List
           </Typography>
-          <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.4)' }}>
+          <Typography variant="body2" sx={{ color: 'rgba(0,0,0,0.45)' }}>
             Manage your tasks with full CRUD operations
           </Typography>
         </Box>
@@ -51,7 +51,7 @@ export default function TodosPage() {
 
           {status === 'loading' && (
             <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
-              <CircularProgress size={28} sx={{ color: '#818cf8' }} />
+              <CircularProgress size={28} sx={{ color: '#007AFF' }} />
             </Box>
           )}
 
@@ -63,11 +63,11 @@ export default function TodosPage() {
                 px: 2,
                 mt: 2,
                 borderRadius: 2,
-                background: 'rgba(239, 68, 68, 0.06)',
-                border: '1px solid rgba(239, 68, 68, 0.15)',
+                background: 'rgba(255, 59, 48, 0.06)',
+                border: '1px solid rgba(255, 59, 48, 0.12)',
               }}
             >
-              <Typography variant="body2" sx={{ color: '#f87171' }}>
+              <Typography variant="body2" sx={{ color: '#FF3B30' }}>
                 {error || 'Failed to load todos. Make sure the API is running.'}
               </Typography>
             </Box>
