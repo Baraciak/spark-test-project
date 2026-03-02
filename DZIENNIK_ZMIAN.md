@@ -6,6 +6,39 @@ Historia prac nad projektem.
 
 ## 2026-03
 
+### 2026-03-02 (Claude) - Sesja 9
+
+**Temat: API Smoke Tests — E2E testy dla wszystkich endpointów (feature 005)**
+
+1. **E2E test files** — 4 nowe pliki + 1 update w `apps/api/test/`
+   - `app.e2e-spec.ts` — health check GET `/` (1 test)
+   - `todos.e2e-spec.ts` — pełny rewrite: CRUD + walidacja + whitelist (15 testów)
+   - `boards.e2e-spec.ts` — CRUD + walidacja + empty body edge case (14 testów)
+   - `columns.e2e-spec.ts` — CRUD + reorder + walidacja (22 testy)
+   - `tasks.e2e-spec.ts` — CRUD + move + walidacja (24 testy)
+
+2. **Jest testRegex fix** — zmiana z `.*\.spec\.ts$` na `.*\.(spec|e2e-spec)\.ts$`
+   - Testy `.e2e-spec.ts` w `test/` teraz uruchamiane przez `npm test`
+   - Wcześniej wymagały osobnego `npm run test:e2e`
+
+3. **Spec-kit artefakty** — pełny workflow SDD
+   - `specs/005-api-smoke-test/{spec,plan,tasks}.md`
+
+**Weryfikacja:** ESLint ✅ 0 errors, Typecheck ✅ 0 errors, Testy ✅ 207/207 PASS (12 suites)
+
+**Pliki nowe:**
+- `apps/api/test/app.e2e-spec.ts`
+- `apps/api/test/boards.e2e-spec.ts`
+- `apps/api/test/columns.e2e-spec.ts`
+- `apps/api/test/tasks.e2e-spec.ts`
+- `specs/005-api-smoke-test/{spec,plan,tasks}.md`
+
+**Pliki zmienione:**
+- `apps/api/package.json` (testRegex update)
+- `apps/api/test/todos.e2e-spec.ts` (rewrite — dodano walidację, 404, whitelist)
+
+---
+
 ### 2026-03-02 (Claude) - Sesja 8
 
 **Temat: ESLint + TypeScript Typecheck dla apps/api**
