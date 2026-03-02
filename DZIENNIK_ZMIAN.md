@@ -6,6 +6,70 @@ Historia prac nad projektem.
 
 ## 2026-03
 
+### 2026-03-02 (Claude) - Sesja 7
+
+**Temat: Task Entity & CRUD API + Move Endpoint (feature 004)**
+
+1. **Task Entity** — encja taska Kanban
+   - `apps/api/src/tasks/entities/task.entity.ts`
+   - Extends BaseEntity (UUID PK, timestamps)
+   - Pola: title (varchar 255), description (text nullable), order (int default 0), columnId (FK)
+   - ManyToOne → BoardColumn z onDelete CASCADE
+
+2. **BoardColumn Entity Update** — dodana relacja OneToMany → Task
+   - `apps/api/src/columns/entities/board-column.entity.ts`
+
+3. **BoardsService Update** — eager load pełnego drzewa
+   - Board → columns (order ASC) → tasks (order ASC)
+
+4. **TasksService** — pełna logika biznesowa
+   - DI: ColumnsService (walidacja istnienia kolumny — SOLID)
+   - create(): auto-assign order = max(order) + 1
+   - findAllByColumn(): sorted by order ASC
+   - move(): transakcyjny (queryRunner) — cross-column i same-column reorder
+   - findOne(), update(), remove(): standardowy CRUD
+
+5. **TasksController** — 6 endpointów z Swagger
+   - POST /tasks (201, 400, 404)
+   - GET /columns/:columnId/tasks (200, 404)
+   - GET /tasks/:id (200, 404)
+   - PATCH /tasks/:id (200, 404)
+   - DELETE /tasks/:id (200, 404)
+   - PATCH /tasks/:id/move (200, 404)
+
+6. **DTOs** — walidacja class-validator
+   - CreateTaskDto: title (IsNotEmpty, MaxLength 255), columnId (IsUUID), description (IsOptional)
+   - UpdateTaskDto: title (IsOptional), description (IsOptional)
+   - MoveTaskDto: columnId (IsUUID), order (IsInt, Min 0)
+
+7. **Migracja** — `CreateTaskTable` (tasks + FK CASCADE do board_columns)
+
+8. **Testy** — 123/123 PASS
+   - Unit: TasksService (15 testów — CRUD, auto-order, move cross/same column, rollback)
+   - E2E: TasksController (24 testy — wszystkie endpointy, validation, UUID pipe, move)
+   - Istniejące: zaktualizowane (BoardsService findOne assertion — eager load tasks)
+
+**Pliki nowe:**
+- `apps/api/src/tasks/tasks.module.ts`
+- `apps/api/src/tasks/tasks.controller.ts`
+- `apps/api/src/tasks/tasks.service.ts`
+- `apps/api/src/tasks/entities/task.entity.ts`
+- `apps/api/src/tasks/dto/create-task.dto.ts`
+- `apps/api/src/tasks/dto/update-task.dto.ts`
+- `apps/api/src/tasks/dto/move-task.dto.ts`
+- `apps/api/src/tasks/tasks.service.spec.ts`
+- `apps/api/src/tasks/tasks.controller.spec.ts`
+- `apps/api/src/migrations/1772480584290-CreateTaskTable.ts`
+- `specs/004-task-entity-api/{plan,tasks}.md`
+
+**Pliki zmienione:**
+- `apps/api/src/columns/entities/board-column.entity.ts` (OneToMany → Task)
+- `apps/api/src/boards/boards.service.ts` (findOne eager load columns.tasks)
+- `apps/api/src/boards/boards.service.spec.ts` (updated findOne assertion)
+- `apps/api/src/app.module.ts` (import TasksModule)
+
+---
+
 ### 2026-03-02 (Claude) - Sesja 6
 
 **Temat: BoardColumn Entity & CRUD API (feature 003)**

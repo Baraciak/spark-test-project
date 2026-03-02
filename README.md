@@ -107,6 +107,12 @@ npm run docker:down
 | `PATCH` | `/columns/:id` | Update column |
 | `DELETE` | `/columns/:id` | Delete column |
 | `PATCH` | `/boards/:boardId/columns/reorder` | Reorder columns within a board |
+| `POST` | `/tasks` | Create task in a column |
+| `GET` | `/columns/:columnId/tasks` | List tasks for a column (order ASC) |
+| `GET` | `/tasks/:id` | Get single task |
+| `PATCH` | `/tasks/:id` | Update task |
+| `DELETE` | `/tasks/:id` | Delete task |
+| `PATCH` | `/tasks/:id/move` | Move task (transactional) |
 
 ## Environment Variables
 

@@ -58,15 +58,24 @@ spark_test_project/
 │   │       │   └── dto/
 │   │       │       ├── create-board.dto.ts
 │   │       │       └── update-board.dto.ts
-│   │       └── columns/              # Moduł Kanban Column
-│   │           ├── columns.module.ts  # imports: BoardsModule, exports: ColumnsService
-│   │           ├── columns.controller.ts
-│   │           ├── columns.service.ts # DI: BoardsService
-│   │           ├── entities/board-column.entity.ts  # ManyToOne → Board (CASCADE)
+│   │       ├── columns/              # Moduł Kanban Column
+│   │       │   ├── columns.module.ts  # imports: BoardsModule, exports: ColumnsService
+│   │       │   ├── columns.controller.ts
+│   │       │   ├── columns.service.ts # DI: BoardsService
+│   │       │   ├── entities/board-column.entity.ts  # ManyToOne → Board, OneToMany → Task
+│   │       │   └── dto/
+│   │       │       ├── create-column.dto.ts
+│   │       │       ├── update-column.dto.ts
+│   │       │       └── reorder-columns.dto.ts
+│   │       └── tasks/                # Moduł Kanban Task
+│   │           ├── tasks.module.ts    # imports: ColumnsModule, exports: TasksService
+│   │           ├── tasks.controller.ts
+│   │           ├── tasks.service.ts   # DI: ColumnsService, transakcyjny move
+│   │           ├── entities/task.entity.ts  # ManyToOne → BoardColumn (CASCADE)
 │   │           └── dto/
-│   │               ├── create-column.dto.ts
-│   │               ├── update-column.dto.ts
-│   │               └── reorder-columns.dto.ts
+│   │               ├── create-task.dto.ts
+│   │               ├── update-task.dto.ts
+│   │               └── move-task.dto.ts
 │   └── web/                          # Next.js 15 frontend
 │       └── src/
 │           ├── app/                   # App Router
@@ -115,6 +124,12 @@ spark_test_project/
 | PATCH | `/columns/:id` | Aktualizuj kolumnę |
 | DELETE | `/columns/:id` | Usuń kolumnę |
 | PATCH | `/boards/:boardId/columns/reorder` | Zmień kolejność kolumn |
+| POST | `/tasks` | Utwórz task (z columnId) |
+| GET | `/columns/:columnId/tasks` | Lista tasków kolumny (order ASC) |
+| GET | `/tasks/:id` | Szczegóły taska |
+| PATCH | `/tasks/:id` | Aktualizuj task |
+| DELETE | `/tasks/:id` | Usuń task |
+| PATCH | `/tasks/:id/move` | Przenieś task (transakcyjnie) |
 
 Swagger docs: `http://localhost:3001/docs`
 

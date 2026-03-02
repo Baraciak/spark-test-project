@@ -24,8 +24,8 @@ export class BoardsService {
   async findOne(id: string): Promise<Board> {
     const board = await this.boardsRepository.findOne({
       where: { id },
-      relations: ['columns'],
-      order: { columns: { order: 'ASC' } },
+      relations: ['columns', 'columns.tasks'],
+      order: { columns: { order: 'ASC', tasks: { order: 'ASC' } } },
     });
     if (!board) {
       throw new NotFoundException(`Board #${id} not found`);
