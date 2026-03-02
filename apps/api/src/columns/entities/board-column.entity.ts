@@ -1,6 +1,7 @@
-import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { BaseEntity } from '../../common/entities/base.entity';
 import { Board } from '../../boards/entities/board.entity';
+import { Task } from '../../tasks/entities/task.entity';
 
 @Entity('board_columns')
 export class BoardColumn extends BaseEntity {
@@ -16,4 +17,7 @@ export class BoardColumn extends BaseEntity {
   @ManyToOne(() => Board, (board) => board.columns, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'boardId' })
   board: Board;
+
+  @OneToMany(() => Task, (task) => task.column)
+  tasks: Task[];
 }
