@@ -6,6 +6,37 @@ Historia prac nad projektem.
 
 ## 2026-03
 
+### 2026-03-02 (Claude) - Sesja 11
+
+**Temat: Board Redux State Management (feature 007)**
+
+1. **boardsSlice.ts** — nowy Redux slice z pełnym state management
+   - `BoardsState`: items (Board[]), activeBoard (Board | null), status, error
+   - Board thunks: fetchBoards, fetchBoard, addBoard, updateBoard, removeBoard
+   - Column thunks: addColumn, updateColumn, removeColumn, reorderColumns
+   - Task thunks: addTask, updateTask, removeTask, moveTask
+   - Wzorzec re-fetch: column/task mutation thunks re-fetchują activeBoard po każdej operacji
+
+2. **store.ts** — rejestracja boards reducer obok istniejącego todos
+
+3. **Spec-kit artefakty** — pełny workflow SDD z analizą spójności
+   - `specs/007-board-redux-state/{spec,plan,tasks}.md`
+   - Analiza spójności: naprawiono param mismatch (removeColumn/removeTask → boardId)
+
+**Weryfikacja:** Typecheck ✅ `tsc --noEmit` PASS, API lint ✅ 0 errors, API typecheck ✅ 0 errors
+
+**Pliki nowe:**
+- `apps/web/src/store/boardsSlice.ts`
+- `specs/007-board-redux-state/plan.md`
+- `specs/007-board-redux-state/tasks.md`
+
+**Pliki zmienione:**
+- `apps/web/src/store/store.ts` (boards reducer)
+- `specs/007-board-redux-state/spec.md` (param fixes)
+- `CLAUDE.md` (struktura: boardsSlice.ts, Active Technologies cleanup)
+
+---
+
 ### 2026-03-02 (Claude) - Sesja 10
 
 **Temat: Frontend Types + API Service Layer (feature 006)**

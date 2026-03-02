@@ -3,113 +3,113 @@
 **Feature Branch**: `007-board-redux-state`
 **Created**: 2026-03-02
 **Status**: Draft
-**Input**: User description: "Utwórz boardSlice z Redux Toolkit — async thunks dla CRUD boards/columns/tasks, optimistic moveTaskOptimistic reducer, rejestracja w store — wzorcem todosSlice"
+**Input**: User description: "Add Redux Toolkit state management (slices, async thunks) for Boards, Columns, and Tasks"
 
 ## User Scenarios & Testing *(mandatory)*
 
-### User Story 1 - Board list state management (Priority: P1)
+### User Story 1 - Boards CRUD State (Priority: P1)
 
-Jako frontend developer chcę async thunks do zarządzania listą tablic (fetch, create, delete), aby strona /boards mogła wyświetlać i zarządzać tablicami.
+As a developer, I need a Redux slice for Boards so that the frontend can fetch, create, update, and delete boards with proper loading/error states.
 
-**Why this priority**: Lista tablic to punkt wejścia — pierwszy ekran po nawigacji do /boards.
+**Why this priority**: Boards are the top-level entity. Without board state management, columns and tasks cannot be displayed.
 
-**Independent Test**: Dispatch fetchBoards → state.board.boards wypełniony danymi z API.
+**Independent Test**: Dispatch `fetchBoards()` thunk and verify the store contains board data with correct status transitions (idle → loading → succeeded).
 
 **Acceptance Scenarios**:
 
-1. **Given** boardSlice zarejestrowany w store, **When** dispatch(fetchBoards()), **Then** state.board.boards zawiera listę z API
-2. **Given** boardSlice, **When** dispatch(createBoard({ name: "Sprint 1" })), **Then** nowy board dodany do state.board.boards
-3. **Given** boardSlice, **When** dispatch(deleteBoard(id)), **Then** board usunięty z state.board.boards
-4. **Given** fetchBoards pending, **When** loading, **Then** state.board.status === 'loading'
-5. **Given** fetchBoards rejected, **When** API error, **Then** state.board.status === 'failed', error message w state
+1. **Given** store is initialized, **When** `fetchBoards()` is dispatched, **Then** `boards.status` transitions to `'loading'` then `'succeeded'`, and `boards.items` contains the API response.
+2. **Given** boards are loaded, **When** `addBoard({ name, description })` is dispatched, **Then** the new board is prepended to `boards.items`.
+3. **Given** a board exists, **When** `updateBoard({ id, data })` is dispatched, **Then** the board in `boards.items` is updated in place.
+4. **Given** a board exists, **When** `removeBoard(id)` is dispatched, **Then** the board is removed from `boards.items`.
+5. **Given** API returns error, **When** any thunk is rejected, **Then** `boards.status` is `'failed'` and `boards.error` contains the error message.
 
 ---
 
-### User Story 2 - Active board with full tree (Priority: P1)
+### User Story 2 - Active Board with Columns (Priority: P1)
 
-Jako frontend developer chcę async thunk fetchBoard(id) ładujący pełne drzewo board → columns → tasks, aby widok Kanban miał kompletne dane.
+As a developer, I need to load a single board with its columns and tasks (active board) and manage column CRUD + reorder so that a Kanban view can be rendered.
 
-**Why this priority**: Pełne drzewo to dane dla widoku Kanban — bez niego nie ma tablicy.
+**Why this priority**: Columns are essential for the Kanban layout and must be loaded when viewing a board.
 
-**Independent Test**: Dispatch fetchBoard(id) → state.board.activeBoard zawiera board z columns i tasks.
+**Independent Test**: Dispatch `fetchBoard(id)` to load a board with eager-loaded columns, verify `activeBoard` is populated with columns sorted by order.
 
 **Acceptance Scenarios**:
 
-1. **Given** boardSlice, **When** dispatch(fetchBoard(id)), **Then** state.board.activeBoard zawiera board z columns (order ASC) i tasks (order ASC)
-2. **Given** fetchBoard z nieistniejącym ID, **When** API 404, **Then** state.board.error ustawiony
-3. **Given** activeBoard załadowany, **When** dispatch(createColumn({ name: "New", boardId })), **Then** kolumna dodana do activeBoard.columns
-4. **Given** activeBoard załadowany, **When** dispatch(deleteColumn(id)), **Then** kolumna usunięta z activeBoard.columns
+1. **Given** a board ID, **When** `fetchBoard(id)` is dispatched, **Then** `boards.activeBoard` is populated with the full board including columns and tasks.
+2. **Given** an active board, **When** `addColumn({ name, boardId })` is dispatched, **Then** `activeBoard` is re-fetched and the new column appears.
+3. **Given** columns exist, **When** `updateColumn({ id, data })` is dispatched, **Then** `activeBoard` is re-fetched with the updated column.
+4. **Given** columns exist, **When** `removeColumn({ id, boardId })` is dispatched, **Then** `activeBoard` is re-fetched without the deleted column.
+5. **Given** columns exist, **When** `reorderColumns({ boardId, columnIds })` is dispatched, **Then** `activeBoard` is re-fetched with new column order.
 
 ---
 
-### User Story 3 - Task CRUD in active board (Priority: P1)
+### User Story 3 - Tasks State Management (Priority: P1)
 
-Jako frontend developer chcę async thunks do zarządzania taskami w aktywnej tablicy.
+As a developer, I need task CRUD and move thunks so that tasks can be created, edited, deleted, and moved between columns.
 
-**Why this priority**: Taski to core content — dodawanie, edycja, usuwanie z poziomu widoku Kanban.
+**Why this priority**: Tasks are the core unit of work on a Kanban board. Moving tasks is the primary user interaction.
 
-**Independent Test**: Dispatch createTask → task dodany do odpowiedniej kolumny w activeBoard.
+**Independent Test**: Dispatch `addTask({ title, columnId })` and verify the task appears in activeBoard, then dispatch `moveTask()` and verify the board re-fetches with updated state.
 
 **Acceptance Scenarios**:
 
-1. **Given** activeBoard z kolumnami, **When** dispatch(createTask({ title: "Task", columnId })), **Then** task dodany do odpowiedniej kolumny w activeBoard
-2. **Given** activeBoard z taskami, **When** dispatch(updateTask({ id, title: "New" })), **Then** task zaktualizowany w odpowiedniej kolumnie
-3. **Given** activeBoard z taskami, **When** dispatch(deleteTask(id)), **Then** task usunięty z odpowiedniej kolumny
+1. **Given** an active board with columns, **When** `addTask({ title, columnId })` is dispatched, **Then** `activeBoard` is re-fetched and the task appears in the target column.
+2. **Given** a task exists, **When** `updateTask({ id, data })` is dispatched, **Then** `activeBoard` is re-fetched with the updated task.
+3. **Given** a task exists, **When** `removeTask({ id, boardId })` is dispatched, **Then** `activeBoard` is re-fetched without the deleted task.
+4. **Given** a task in column A, **When** `moveTask({ id, columnId: B, order: 0 })` is dispatched, **Then** `activeBoard` is re-fetched reflecting the new positions.
 
 ---
 
-### User Story 4 - Optimistic move task (Priority: P1)
+### User Story 4 - Store Registration (Priority: P1)
 
-Jako frontend developer chcę synchroniczny reducer moveTaskOptimistic i async thunk moveTask z revert on failure, aby drag & drop (feature 010) działał płynnie.
+As a developer, I need the boards slice registered in the Redux store so that `useAppSelector(state => state.boards)` works.
 
-**Why this priority**: Optimistic update to klucz do responsive UX — użytkownik widzi zmianę natychmiast.
+**Why this priority**: Without store registration, no slice is usable.
 
-**Independent Test**: Dispatch moveTaskOptimistic → state zmieniony natychmiast. MoveTask rejected → revert.
+**Independent Test**: Call `store.getState()` and verify `state.boards` exists with initial state shape.
 
 **Acceptance Scenarios**:
 
-1. **Given** activeBoard z taskami, **When** dispatch(moveTaskOptimistic({ taskId, sourceColumnId, targetColumnId, newOrder })), **Then** task przeniesiony w state natychmiast (synchronicznie)
-2. **Given** moveTask dispatched, **When** API potwierdza, **Then** state pozostaje (no-op — already updated)
-3. **Given** moveTask dispatched, **When** API rejected, **Then** state reverted do snapshot sprzed move
-4. **Given** revert, **When** state przywrócony, **Then** task wraca do oryginalnej kolumny i pozycji
+1. **Given** the store is configured, **When** `store.getState()` is called, **Then** `state.boards` exists with `{ items: [], activeBoard: null, status: 'idle', error: null }`.
 
 ---
 
 ### Edge Cases
 
-- Co się dzieje gdy API jest niedostępne? → status: 'failed', error message w state
-- Co się dzieje gdy moveTask optimistic update a potem API failure? → Revert state do snapshot sprzed move
-- Co się dzieje gdy fetchBoard z nieistniejącym ID? → 404 → error w state
-- Co się dzieje przy concurrent dispatch? → Redux serializes reducers — safe
+- Non-existent board ID in `fetchBoard()` → status `'failed'`, error from API 404.
+- `addColumn` when board no longer exists → thunk rejected, error displayed.
+- `moveTask` to a deleted column → thunk rejected, activeBoard should be re-fetched.
+- Rapid consecutive dispatches → each thunk runs independently; re-fetch pattern ensures server-side consistency.
 
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
 
-- **FR-001**: boardSlice state: `{ boards: Board[], activeBoard: Board | null, status: 'idle' | 'loading' | 'succeeded' | 'failed', error: string | null }`
-- **FR-002**: Async thunks (boards): fetchBoards, fetchBoard, createBoard, deleteBoard
-- **FR-003**: Async thunks (columns): createColumn, deleteColumn, reorderColumns
-- **FR-004**: Async thunks (tasks): createTask, updateTask, deleteTask, moveTask
-- **FR-005**: Synchroniczny reducer moveTaskOptimistic — immediate state update for drag & drop
-- **FR-006**: moveTask.rejected MUSI revert state do snapshot zapisanego w moveTask.pending
-- **FR-007**: store.ts MUSI zarejestrować boardReducer obok istniejącego todosReducer
-- **FR-008**: Wzorzec thunków spójny z istniejącym todosSlice (createAsyncThunk)
-- **FR-009**: Użycie typów i API service z feature 006 (boardsApi, columnsApi, tasksApi)
+- **FR-001**: System MUST provide a `boardsSlice` with async thunks: `fetchBoards`, `fetchBoard`, `addBoard`, `updateBoard`, `removeBoard`.
+- **FR-002**: System MUST track `activeBoard` (Board | null) containing the full board with eager-loaded columns and tasks.
+- **FR-003**: System MUST provide column thunks: `addColumn`, `updateColumn`, `removeColumn`, `reorderColumns` — each re-fetching `activeBoard` after mutation.
+- **FR-004**: System MUST provide task thunks: `addTask`, `updateTask`, `removeTask`, `moveTask` — each re-fetching `activeBoard` after mutation.
+- **FR-005**: Each thunk MUST handle loading states (`idle`, `loading`, `succeeded`, `failed`) and error messages.
+- **FR-006**: Column/task mutation thunks MUST re-fetch the active board (via `boardsApi.getOne`) to ensure consistent ordering from the server.
+- **FR-007**: The boards slice MUST be registered in the Redux store alongside the existing todos slice.
+- **FR-008**: System MUST use existing API services (`boardsApi`, `columnsApi`, `tasksApi`) from `services/api.ts`.
+- **FR-009**: System MUST use existing TypeScript types from `types/board.ts` — no `any` types.
 
 ### Key Entities
 
-- **BoardState** (interface): Stan slice — boards list, active board, status, error
+- **BoardsState**: `{ items: Board[], activeBoard: Board | null, status: 'idle' | 'loading' | 'succeeded' | 'failed', error: string | null }`
+- **Board**: Top-level entity — name, description, columns[] (from `types/board.ts`)
+- **BoardColumn**: Column — name, order, boardId, tasks[] (from `types/board.ts`)
+- **Task**: Task — title, description, order, columnId (from `types/board.ts`)
 
 ## Success Criteria *(mandatory)*
 
 ### Measurable Outcomes
 
-- **SC-001**: boardSlice zarejestrowany w store — `useAppSelector(state => state.board)` działa
-- **SC-002**: Dispatch fetchBoards/fetchBoard aktualizuje state (loading → succeeded/failed)
-- **SC-003**: Dispatch createBoard/deleteBoard aktualizuje state.boards
-- **SC-004**: Dispatch createColumn/deleteColumn aktualizuje state.activeBoard.columns
-- **SC-005**: Dispatch createTask/updateTask/deleteTask aktualizuje taski w odpowiedniej kolumnie
-- **SC-006**: moveTaskOptimistic synchronicznie przenosi task w state
-- **SC-007**: moveTask.rejected revertuje state do snapshot
-- **SC-008**: TypeScript kompiluje bez błędów (`npm run build:web`)
-- **SC-009**: Istniejący todosSlice działa bez regresji
+- **SC-001**: All 5 board thunks implemented and dispatching correctly.
+- **SC-002**: All 4 column thunks implemented, each re-fetching activeBoard.
+- **SC-003**: All 4 task thunks implemented, each re-fetching activeBoard.
+- **SC-004**: `boardsSlice` registered in store, `state.boards` accessible via hooks.
+- **SC-005**: TypeScript compiles without errors (`tsc --noEmit`).
+- **SC-006**: ESLint passes with zero errors.
+- **SC-007**: No `any` types — all state, payloads, and returns properly typed.

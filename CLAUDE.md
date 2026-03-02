@@ -95,7 +95,8 @@ spark_test_project/
 │           ├── store/                # Redux Toolkit
 │           │   ├── store.ts
 │           │   ├── hooks.ts          # useAppDispatch, useAppSelector
-│           │   └── todosSlice.ts     # async thunks
+│           │   ├── todosSlice.ts     # async thunks (todos CRUD)
+│           │   └── boardsSlice.ts    # async thunks (boards/columns/tasks CRUD + move/reorder)
 │           ├── services/api.ts       # Axios client (todosApi, boardsApi, columnsApi, tasksApi)
 │           ├── types/todo.ts
 │           ├── types/board.ts        # Board, BoardColumn, Task + DTO interfaces
@@ -262,7 +263,7 @@ Artefakty: `.specify/specs/{###-feature}/`
 Konstytucja: `.specify/memory/constitution.md`
 
 ## Active Technologies
-- TypeScript 5.7 / Node.js 22 (005-api-smoke-test)
+- TypeScript 5.7 / Node.js 22
 
 ## Recent Changes
-- 005-api-smoke-test: Added TypeScript 5.7 / Node.js 22
+- 007-board-redux-state: Added boardsSlice with boards/columns/tasks state management
