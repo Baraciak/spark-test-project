@@ -1,6 +1,6 @@
 # Feature Specification: Kanban Board View (/boards/[id])
 
-**Feature Branch**: `007-kanban-board-view`
+**Feature Branch**: `009-kanban-board-view`
 **Created**: 2026-03-02
 **Status**: Draft
 **Input**: User description: "Utwórz widok tablicy Kanban na /boards/[id] z poziomym layoutem kolumn, kartami tasków, formularzem dodawania kolumn i tasków — styl iOS glass"
@@ -94,7 +94,7 @@ Jako użytkownik chcę usunąć kolumnę lub task z tablicy.
 - **FR-008**: Styl iOS glass — spójny z resztą aplikacji
 - **FR-009**: Kolumny scrollowalne poziomo gdy nie mieszczą się w viewport
 - **FR-010**: Taski scrollowalne pionowo w kolumnie
-- **FR-011**: Ten feature dostarcza pełną tablicę Kanban CRUD (bez drag & drop — to feature 008)
+- **FR-011**: Ten feature dostarcza pełną tablicę Kanban CRUD (bez drag & drop — to feature 010)
 
 ## Success Criteria *(mandatory)*
 

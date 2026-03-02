@@ -39,14 +39,25 @@ spark_test_project/
 │   │       ├── app.module.ts          # TypeORM config, moduły
 │   │       ├── data-source.ts         # TypeORM CLI DataSource (migracje)
 │   │       ├── migrations/            # Migracje bazy danych
-│   │       └── todos/                 # Moduł CRUD
-│   │           ├── todos.module.ts
-│   │           ├── todos.controller.ts
-│   │           ├── todos.service.ts
-│   │           ├── entities/todo.entity.ts
+│   │       ├── common/
+│   │       │   └── entities/
+│   │       │       └── base.entity.ts # Abstract: UUID PK, timestamps
+│   │       ├── todos/                 # Moduł CRUD Todo
+│   │       │   ├── todos.module.ts
+│   │       │   ├── todos.controller.ts
+│   │       │   ├── todos.service.ts
+│   │       │   ├── entities/todo.entity.ts
+│   │       │   └── dto/
+│   │       │       ├── create-todo.dto.ts
+│   │       │       └── update-todo.dto.ts
+│   │       └── boards/               # Moduł Kanban Board
+│   │           ├── boards.module.ts
+│   │           ├── boards.controller.ts
+│   │           ├── boards.service.ts  # exports: BoardsService
+│   │           ├── entities/board.entity.ts
 │   │           └── dto/
-│   │               ├── create-todo.dto.ts
-│   │               └── update-todo.dto.ts
+│   │               ├── create-board.dto.ts
+│   │               └── update-board.dto.ts
 │   └── web/                          # Next.js 15 frontend
 │       └── src/
 │           ├── app/                   # App Router
@@ -84,6 +95,11 @@ spark_test_project/
 | GET | `/todos/:id` | Szczegóły todo |
 | PATCH | `/todos/:id` | Aktualizuj todo |
 | DELETE | `/todos/:id` | Usuń todo |
+| POST | `/boards` | Utwórz board |
+| GET | `/boards` | Lista boards (DESC) |
+| GET | `/boards/:id` | Szczegóły board |
+| PATCH | `/boards/:id` | Aktualizuj board |
+| DELETE | `/boards/:id` | Usuń board |
 
 Swagger docs: `http://localhost:3001/docs`
 
