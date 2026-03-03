@@ -40,7 +40,7 @@ Sprawdź czy jest aktywna feature branch:
 git rev-parse --abbrev-ref HEAD
 ```
 
-Jeśli branch pasuje do `[0-9]{3}-*` lub `fix/*`, sprawdź istniejące artefakty:
+Jeśli branch pasuje do `[0-9]{3}-*` (feature) lub `fix/*` (bug fix), sprawdź istniejące artefakty:
 
 ```bash
 .specify/scripts/bash/check-prerequisites.sh --paths-only --json
@@ -80,8 +80,8 @@ Określ typ na podstawie opisu:
 
 **Dla feature**:
 - Branch: `NNN-short-name` (np. `010-kanban-board`)
-- Spec dir: `specs/NNN-short-name/`
-- Użyj `create-new-feature.sh` jak dotychczas
+- Spec dir: `specs/feat/NNN-short-name/`
+- Użyj `create-new-feature.sh` jak dotychczas (tworzy w `specs/feat/`)
 
 ## FAZA 1: SPECYFIKACJA
 
@@ -98,7 +98,7 @@ Wykonaj pełny workflow z `/speckit.specify`:
 2. Sprawdź istniejące branche i numery
 3. Utwórz branch i spec dir:
    - **Feature**: `create-new-feature.sh --json --short-name "<short-name>" --number <N> "<description>"`
-   - **Bug fix**: Ręcznie `git checkout -b fix/NN-short-name && mkdir -p specs/fix/NN-short-name`
+   - **Bug fix**: Ręcznie `git checkout -b fix/NN-short-name && mkdir -p specs/fix/NN-short-name/`
 4. Załaduj `.specify/templates/spec-template.md`
 5. Przeanalizuj istniejący kod projektu:
    - `apps/api/src/` — moduły NestJS
@@ -111,7 +111,7 @@ Wykonaj pełny workflow z `/speckit.specify`:
 **STOP — Czekaj na akceptację:**
 
 ```
-Specyfikacja gotowa: specs/[branch]/spec.md
+Specyfikacja gotowa: specs/feat/[branch]/spec.md (lub specs/fix/[branch]/ dla bug fix)
 
 Chcesz:
 1. Zaakceptować i przejść do planowania
@@ -168,8 +168,8 @@ Wykonaj workflow z `/speckit.tasks`:
 **STOP — Pokaż plan i zadania:**
 
 ```
-Plan: specs/[branch]/plan.md
-Zadania: specs/[branch]/tasks.md
+Plan: specs/{feat|fix}/[branch]/plan.md
+Zadania: specs/{feat|fix}/[branch]/tasks.md
 
 Podsumowanie:
 - [N] zadań w [M] fazach
@@ -248,9 +248,9 @@ Pokaż podsumowanie:
 ═══ ZAKOŃCZONO ═══
 
 Branch: [branch-name]
-Spec:   specs/[branch]/spec.md
-Plan:   specs/[branch]/plan.md
-Tasks:  specs/[branch]/tasks.md ([done]/[total] ukończone)
+Spec:   specs/{feat|fix}/[branch]/spec.md
+Plan:   specs/{feat|fix}/[branch]/plan.md
+Tasks:  specs/{feat|fix}/[branch]/tasks.md ([done]/[total] ukończone)
 
 Testy:  ✅ npm test — PASS
 Lint:   ✅ npm run lint — PASS

@@ -267,7 +267,7 @@ Komendy szczegółowe (jeśli chcesz uruchamiać ręcznie):
 - `/speckit.analyze` — analiza spójności (opcjonalnie)
 - `/speckit.taskstoissues` — eksport zadań do GitHub Issues (opcjonalnie)
 
-Artefakty: `.specify/specs/{###-feature}/`
+Artefakty: `specs/feat/{###-feature}/` (features), `specs/fix/{NN-fix-name}/` (bug fixes)
 Konstytucja: `.specify/memory/constitution.md`
 
 ## Active Technologies

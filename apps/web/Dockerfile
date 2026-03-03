@@ -11,6 +11,8 @@ WORKDIR /app
 COPY tsconfig.base.json ./
 COPY apps/web/ apps/web/
 ENV NEXT_TELEMETRY_DISABLED=1
+ARG BACKEND_URL=http://api:3001
+ENV BACKEND_URL=${BACKEND_URL}
 RUN npm run build --workspace=apps/web
 
 # ── Stage 3: Runner ────────────────────────────────────────
