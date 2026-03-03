@@ -10,8 +10,11 @@ import {
   Button,
 } from '@mui/material';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
+import { Droppable } from '@hello-pangea/dnd';
+import type { DraggableProvidedDragHandleProps } from '@hello-pangea/dnd';
 import KanbanTaskCard from './KanbanTaskCard';
 import TaskDetailModal from './TaskDetailModal';
 import ConfirmDeleteDialog from './ConfirmDeleteDialog';
@@ -27,9 +30,10 @@ interface KanbanColumnProps {
   column: BoardColumn;
   boardId: string;
   index: number;
+  dragHandleProps?: DraggableProvidedDragHandleProps | null;
 }
 
-export default function KanbanColumn({ column, boardId, index }: KanbanColumnProps) {
+export default function KanbanColumn({ column, boardId, index, dragHandleProps }: KanbanColumnProps) {
   const dispatch = useAppDispatch();
 
   // Inline edit column name
@@ -121,6 +125,22 @@ export default function KanbanColumn({ column, boardId, index }: KanbanColumnPro
           borderBottom: '1px solid rgba(0,0,0,0.06)',
         }}
       >
+        {dragHandleProps && (
+          <Box
+            {...dragHandleProps}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              mr: 0.5,
+              cursor: 'grab',
+              opacity: 0.3,
+              '&:hover': { opacity: 0.6 },
+              '&:active': { cursor: 'grabbing' },
+            }}
+          >
+            <DragIndicatorIcon fontSize="small" />
+          </Box>
+        )}
         {isEditingName ? (
           <TextField
             autoFocus
@@ -181,30 +201,44 @@ export default function KanbanColumn({ column, boardId, index }: KanbanColumnPro
       </Box>
 
       {/* Tasks List */}
-      <Box
-        sx={{
-          flex: 1,
-          overflowY: 'auto',
-          px: 1.5,
-          py: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 1,
-          '&::-webkit-scrollbar': { width: 4 },
-          '&::-webkit-scrollbar-thumb': {
-            background: 'rgba(0,0,0,0.1)',
-            borderRadius: 2,
-          },
-        }}
-      >
-        {column.tasks.map((task) => (
-          <KanbanTaskCard
-            key={task.id}
-            task={task}
-            onClick={() => setSelectedTask(task)}
-          />
-        ))}
-      </Box>
+      <Droppable droppableId={column.id} type="TASK">
+        {(provided, snapshot) => (
+          <Box
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+            sx={{
+              flex: 1,
+              overflowY: 'auto',
+              px: 1.5,
+              py: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 1,
+              minHeight: 40,
+              transition: 'background-color 0.2s ease',
+              backgroundColor: snapshot.isDraggingOver
+                ? 'rgba(0, 122, 255, 0.04)'
+                : 'transparent',
+              borderRadius: 1,
+              '&::-webkit-scrollbar': { width: 4 },
+              '&::-webkit-scrollbar-thumb': {
+                background: 'rgba(0,0,0,0.1)',
+                borderRadius: 2,
+              },
+            }}
+          >
+            {column.tasks.map((task, idx) => (
+              <KanbanTaskCard
+                key={task.id}
+                task={task}
+                index={idx}
+                onClick={() => setSelectedTask(task)}
+              />
+            ))}
+            {provided.placeholder}
+          </Box>
+        )}
+      </Droppable>
 
       {/* Add Task */}
       <Box sx={{ px: 1.5, py: 1, borderTop: '1px solid rgba(0,0,0,0.04)' }}>

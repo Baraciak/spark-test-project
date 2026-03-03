@@ -200,12 +200,17 @@ Wykonaj workflow z `/speckit.implement`:
 3. Implementuj zadania faza po fazie:
    - Po każdym zadaniu zaznacz `[X]` w tasks.md
    - Raportuj postęp
-4. Po implementacji uruchom testy:
+4. **WAŻNE — Docker rebuild**: Jeśli instalowałeś/usuwałeś zależności (npm install/uninstall) lub zmieniałeś package.json/package-lock.json, przebuduj odpowiedni kontener Docker:
+   ```bash
+   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build web   # po zmianach w apps/web
+   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build api   # po zmianach w apps/api
+   ```
+5. Po implementacji uruchom testy:
    ```bash
    npm test
    npm run lint --workspaces --if-present
    ```
-5. Napraw ewentualne błędy
+6. Napraw ewentualne błędy
 
 Jeśli testy nie przechodzą — napraw i powtórz.
 

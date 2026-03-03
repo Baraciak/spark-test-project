@@ -84,9 +84,9 @@ Jako użytkownik chcę opcjonalnie zmieniać kolejność kolumn przez przeciąga
 - **FR-001**: Instalacja `@hello-pangea/dnd` w `apps/web`
 - **FR-002**: KanbanBoard.tsx — wrappnąć w `<DragDropContext onDragEnd={handleDragEnd}>`
 - **FR-003**: KanbanColumn.tsx — `<Droppable droppableId={column.id}>` z type="TASK"
-- **FR-004**: KanbanTaskCard.tsx — `<Draggable draggableId={task.id} index={task.order}>`
+- **FR-004**: KanbanTaskCard.tsx — `<Draggable draggableId={task.id} index={idx}>` (array index, nie task.order — DnD wymaga sekwencyjnych 0-based indeksów)
 - **FR-005**: handleDragEnd MUSI: (1) dispatch moveTaskOptimistic (synchronous), (2) dispatch moveTask (async thunk), (3) revert on rejection
-- **FR-006**: boardSlice.ts — optimistic update w moveTask.pending, snapshot state before move, revert w moveTask.rejected
+- **FR-006**: boardSlice.ts — optimistic update w osobnym synchronicznym reducerze `moveTaskOptimistic`, snapshot state before move, revert w `revertOptimisticMove`
 - **FR-007**: Wizualny feedback: elevated shadow na drag (isDragging), placeholder w target kolumnie
 - **FR-008**: Opcjonalnie: drag & drop kolumn z type="COLUMN", direction="horizontal", reorderColumns thunk
 - **FR-009**: Biblioteka @hello-pangea/dnd — utrzymywany fork react-beautiful-dnd, kompatybilny z React 19, accessible (keyboard)

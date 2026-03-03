@@ -6,6 +6,48 @@ Historia prac nad projektem.
 
 ## 2026-03
 
+### 2026-03-03 (Claude) - Sesja 15
+
+**Temat: Drag & Drop z @hello-pangea/dnd (010-drag-and-drop)**
+
+1. **@hello-pangea/dnd** — zainstalowano bibliotekę (fork react-beautiful-dnd, React 19 compatible)
+
+2. **Optimistic Redux updates** — dodano synchroniczne reducery do `boardsSlice.ts`:
+   - `moveTaskOptimistic` — natychmiastowy move taska (cross-column + same-column reorder)
+   - `revertOptimisticMove` — przywraca stan ze snapshotu przy błędzie API
+   - `reorderColumnsOptimistic` — natychmiastowy reorder kolumn
+   - Auto-revert w `moveTask.rejected` i `reorderColumns.rejected`
+
+3. **KanbanBoard.tsx** — `DragDropContext` + `handleDragEnd`:
+   - Obsługa type="TASK" (przenoszenie tasków między kolumnami + reorder w kolumnie)
+   - Obsługa type="COLUMN" (drag & drop kolumn z Droppable/Draggable)
+
+4. **KanbanColumn.tsx** — `Droppable` wrapper na liście tasków:
+   - Drop zone highlight (rgba blue background on isDraggingOver)
+   - Drag handle (DragIndicator icon) do przeciągania kolumn
+
+5. **KanbanTaskCard.tsx** — `Draggable` wrapper:
+   - Elevated shadow + rotation na isDragging
+   - Blue border highlight na drag
+
+6. **Testy** — 6 nowych testów (boardsSlice.dnd.test.ts):
+   - Cross-column move, empty column drop, same-column reorder, revert, column reorder
+   - Naprawiono istniejące testy (DragDropContext wrapper, preloadedState shape)
+
+**Weryfikacja:** Testy ✅ 243/243 PASS (207 API + 36 web), Lint ✅ 0 errors, Typecheck ✅ 0 errors, Build ✅
+
+**Pliki zmienione:**
+- `apps/web/package.json` (+@hello-pangea/dnd)
+- `apps/web/src/store/boardsSlice.ts` (optimistic reducers + revert)
+- `apps/web/src/components/boards/KanbanBoard.tsx` (DragDropContext + Droppable/Draggable columns)
+- `apps/web/src/components/boards/KanbanColumn.tsx` (Droppable tasks + drag handle)
+- `apps/web/src/components/boards/KanbanTaskCard.tsx` (Draggable + drag styles)
+- `apps/web/__tests__/boardsSlice.dnd.test.ts` (nowy — reducer tests)
+- `apps/web/__tests__/KanbanColumn.test.tsx` (fix — DragDropContext wrapper)
+- `apps/web/__tests__/KanbanBoard.test.tsx` (fix — preloadedState shape)
+
+---
+
 ### 2026-03-02 (Claude) - Sesja 14
 
 **Temat: Fix — boards list nie ładuje się po nawigacji z /boards/[id] (fix/01)**

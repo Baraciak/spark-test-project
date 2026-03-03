@@ -6,7 +6,7 @@
 
 **Co to jest**: Full-stack monorepo Todo App - Next.js frontend + NestJS API + MariaDB.
 
-**Stack technologiczny**: Next.js 15, React 19, NestJS 11, TypeORM 0.3, MariaDB 11, TypeScript 5.7, Redux Toolkit, MUI 6, Tailwind CSS 4, Docker
+**Stack technologiczny**: Next.js 15, React 19, NestJS 11, TypeORM 0.3, MariaDB 11, TypeScript 5.7, Redux Toolkit, MUI 6, Tailwind CSS 4, @hello-pangea/dnd, Docker
 
 **Struktura monorepo** (npm workspaces):
 - `apps/web` - Frontend (Next.js 15, App Router, port 3000)
@@ -174,6 +174,10 @@ npm run dev:web          # Tylko frontend (Next.js dev)
 # Dev (Docker)
 npm run docker:dev       # docker compose dev z hot-reload
 npm run docker:down      # Zatrzymaj kontenery
+# WAŻNE: Po instalacji/usunięciu zależności (npm install/uninstall) lub zmianach
+# w package.json/package-lock.json MUSISZ przebudować kontener:
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build <service>
+# np. --build web (po zmianach w apps/web) lub --build api (po zmianach w apps/api)
 
 # Produkcja (Docker)
 npm run docker:prod      # docker compose produkcyjny
@@ -270,6 +274,7 @@ Konstytucja: `.specify/memory/constitution.md`
 - TypeScript 5.7 / Node.js 22
 
 ## Recent Changes
+- 010-drag-and-drop: Added @hello-pangea/dnd drag & drop — task move/reorder between columns, column reorder, optimistic Redux updates with revert, visual drag feedback
 - 009-kanban-board-view: Added /boards/[id] page with KanbanBoard, KanbanColumn, KanbanTaskCard, TaskDetailModal, AddColumnForm, ConfirmDeleteDialog + tests
 - 008-board-list-page: Added /boards page with BoardForm, BoardList, BoardCard + nav updates
 - 007-board-redux-state: Added boardsSlice with boards/columns/tasks state management

@@ -1,11 +1,21 @@
 'use client';
 
+import { useCallback } from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import Link from 'next/link';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ViewColumnIcon from '@mui/icons-material/ViewColumn';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import type { DropResult } from '@hello-pangea/dnd';
 import KanbanColumn from './KanbanColumn';
 import AddColumnForm from './AddColumnForm';
+import { useAppDispatch } from '@/store/hooks';
+import {
+  moveTaskOptimistic,
+  moveTask,
+  reorderColumnsOptimistic,
+  reorderColumns,
+} from '@/store/boardsSlice';
 import type { Board } from '@/types/board';
 
 interface KanbanBoardProps {
@@ -13,7 +23,71 @@ interface KanbanBoardProps {
 }
 
 export default function KanbanBoard({ board }: KanbanBoardProps) {
+  const dispatch = useAppDispatch();
+
+  const handleDragEnd = useCallback(
+    (result: DropResult) => {
+      const { source, destination, type, draggableId } = result;
+
+      // Dropped outside a droppable area
+      if (!destination) return;
+
+      // Dropped in same position
+      if (
+        source.droppableId === destination.droppableId &&
+        source.index === destination.index
+      ) {
+        return;
+      }
+
+      if (type === 'COLUMN') {
+        // Column reorder
+        dispatch(
+          reorderColumnsOptimistic({
+            sourceIndex: source.index,
+            destinationIndex: destination.index,
+          }),
+        );
+
+        const newColumns = [...board.columns];
+        const [moved] = newColumns.splice(source.index, 1);
+        newColumns.splice(destination.index, 0, moved);
+
+        dispatch(
+          reorderColumns({
+            boardId: board.id,
+            columnIds: newColumns.map((c) => c.id),
+          }),
+        );
+        return;
+      }
+
+      // Task drag (type === 'TASK')
+      dispatch(
+        moveTaskOptimistic({
+          taskId: draggableId,
+          sourceColumnId: source.droppableId,
+          sourceIndex: source.index,
+          destinationColumnId: destination.droppableId,
+          destinationIndex: destination.index,
+        }),
+      );
+
+      dispatch(
+        moveTask({
+          id: draggableId,
+          data: {
+            columnId: destination.droppableId,
+            order: destination.index,
+          },
+          boardId: board.id,
+        }),
+      );
+    },
+    [dispatch, board.id, board.columns],
+  );
   return (
+    <DragDropContext onDragEnd={handleDragEnd}>
     <Box>
       {/* Header */}
       <Box
@@ -93,45 +167,76 @@ export default function KanbanBoard({ board }: KanbanBoardProps) {
           </Box>
         </Box>
       ) : (
-        <Box
-          sx={{
-            display: 'flex',
-            gap: 2,
-            overflowX: 'auto',
-            pb: 2,
-            minHeight: 'calc(100vh - 200px)',
-            alignItems: 'flex-start',
-            '&::-webkit-scrollbar': { height: 6 },
-            '&::-webkit-scrollbar-track': {
-              background: 'rgba(0,0,0,0.04)',
-              borderRadius: 3,
-            },
-            '&::-webkit-scrollbar-thumb': {
-              background: 'rgba(0,0,0,0.15)',
-              borderRadius: 3,
-            },
-          }}
+        <Droppable
+          droppableId="board-columns"
+          type="COLUMN"
+          direction="horizontal"
         >
-          {board.columns.map((column, index) => (
-            <KanbanColumn
-              key={column.id}
-              column={column}
-              boardId={board.id}
-              index={index}
-            />
-          ))}
-          <Box
-            className="animate-in"
-            sx={{
-              minWidth: 280,
-              flexShrink: 0,
-              animationDelay: `${board.columns.length * 0.05}s`,
-            }}
-          >
-            <AddColumnForm boardId={board.id} />
-          </Box>
-        </Box>
+          {(provided) => (
+            <Box
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              sx={{
+                display: 'flex',
+                gap: 2,
+                overflowX: 'auto',
+                pb: 2,
+                minHeight: 'calc(100vh - 200px)',
+                alignItems: 'flex-start',
+                '&::-webkit-scrollbar': { height: 6 },
+                '&::-webkit-scrollbar-track': {
+                  background: 'rgba(0,0,0,0.04)',
+                  borderRadius: 3,
+                },
+                '&::-webkit-scrollbar-thumb': {
+                  background: 'rgba(0,0,0,0.15)',
+                  borderRadius: 3,
+                },
+              }}
+            >
+              {board.columns.map((column, index) => (
+                <Draggable
+                  key={column.id}
+                  draggableId={column.id}
+                  index={index}
+                >
+                  {(dragProvided, dragSnapshot) => (
+                    <Box
+                      ref={dragProvided.innerRef}
+                      {...dragProvided.draggableProps}
+                      sx={{
+                        opacity: dragSnapshot.isDragging ? 0.9 : 1,
+                        transform: dragSnapshot.isDragging
+                          ? 'rotate(1deg)'
+                          : undefined,
+                      }}
+                    >
+                      <KanbanColumn
+                        column={column}
+                        boardId={board.id}
+                        index={index}
+                        dragHandleProps={dragProvided.dragHandleProps}
+                      />
+                    </Box>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+              <Box
+                className="animate-in"
+                sx={{
+                  minWidth: 280,
+                  flexShrink: 0,
+                  animationDelay: `${board.columns.length * 0.05}s`,
+                }}
+              >
+                <AddColumnForm boardId={board.id} />
+              </Box>
+            </Box>
+          )}
+        </Droppable>
       )}
     </Box>
+    </DragDropContext>
   );
 }

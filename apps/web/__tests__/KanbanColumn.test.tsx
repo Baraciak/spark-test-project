@@ -2,6 +2,8 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
+import { DragDropContext } from '@hello-pangea/dnd';
+import type { DropResult } from '@hello-pangea/dnd';
 import boardsReducer from '../src/store/boardsSlice';
 import KanbanColumn from '../src/components/boards/KanbanColumn';
 import type { BoardColumn } from '../src/types/board';
@@ -42,15 +44,20 @@ function renderWithStore(column: BoardColumn = mockColumn) {
       boards: {
         items: [],
         activeBoard: null,
-        status: 'succeeded' as const,
+        listStatus: 'succeeded' as const,
+        activeBoardStatus: 'succeeded' as const,
         error: null,
       },
     },
   });
 
+  const onDragEnd = (_result: DropResult) => {};
+
   return render(
     <Provider store={store}>
-      <KanbanColumn column={column} boardId="board-1" index={0} />
+      <DragDropContext onDragEnd={onDragEnd}>
+        <KanbanColumn column={column} boardId="board-1" index={0} />
+      </DragDropContext>
     </Provider>,
   );
 }

@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
 import type {
   Board,
+  BoardColumn,
   CreateBoardDto,
   UpdateBoardDto,
   CreateColumnDto,
@@ -11,6 +13,9 @@ import type {
   MoveTaskDto,
 } from '@/types/board';
 import { boardsApi, columnsApi, tasksApi } from '@/services/api';
+
+// Module-scoped snapshot for optimistic revert (not serialized in Redux DevTools)
+let boardSnapshot: Board | null = null;
 
 export interface BoardsState {
   items: Board[];
@@ -166,7 +171,94 @@ export const moveTask = createAsyncThunk(
 const boardsSlice = createSlice({
   name: 'boards',
   initialState,
-  reducers: {},
+  reducers: {
+    moveTaskOptimistic(
+      state,
+      action: PayloadAction<{
+        taskId: string;
+        sourceColumnId: string;
+        sourceIndex: number;
+        destinationColumnId: string;
+        destinationIndex: number;
+      }>,
+    ) {
+      if (!state.activeBoard) return;
+
+      // Save snapshot for potential revert
+      boardSnapshot = JSON.parse(JSON.stringify(state.activeBoard));
+
+      const {
+        taskId,
+        sourceColumnId,
+        sourceIndex,
+        destinationColumnId,
+        destinationIndex,
+      } = action.payload;
+
+      const sourceCol = state.activeBoard.columns.find(
+        (c: BoardColumn) => c.id === sourceColumnId,
+      );
+      const destCol = state.activeBoard.columns.find(
+        (c: BoardColumn) => c.id === destinationColumnId,
+      );
+      if (!sourceCol || !destCol) return;
+
+      // Remove task from source
+      const [movedTask] = sourceCol.tasks.splice(sourceIndex, 1);
+      if (!movedTask) return;
+
+      // Update columnId if cross-column move
+      if (sourceColumnId !== destinationColumnId) {
+        movedTask.columnId = destinationColumnId;
+      }
+
+      // Insert task at destination
+      destCol.tasks.splice(destinationIndex, 0, movedTask);
+
+      // Re-index orders in affected columns
+      sourceCol.tasks.forEach((t, i) => {
+        t.order = i;
+      });
+      if (sourceColumnId !== destinationColumnId) {
+        destCol.tasks.forEach((t, i) => {
+          t.order = i;
+        });
+      }
+    },
+
+    revertOptimisticMove(state) {
+      if (boardSnapshot) {
+        state.activeBoard = boardSnapshot;
+        boardSnapshot = null;
+      }
+    },
+
+    reorderColumnsOptimistic(
+      state,
+      action: PayloadAction<{
+        sourceIndex: number;
+        destinationIndex: number;
+      }>,
+    ) {
+      if (!state.activeBoard) return;
+
+      // Save snapshot for potential revert
+      boardSnapshot = JSON.parse(JSON.stringify(state.activeBoard));
+
+      const { sourceIndex, destinationIndex } = action.payload;
+      const columns = state.activeBoard.columns;
+
+      const [movedColumn] = columns.splice(sourceIndex, 1);
+      if (!movedColumn) return;
+
+      columns.splice(destinationIndex, 0, movedColumn);
+
+      // Re-index orders
+      columns.forEach((c, i) => {
+        c.order = i;
+      });
+    },
+  },
   extraReducers: (builder) => {
     builder
       // fetchBoards
@@ -225,6 +317,7 @@ const boardsSlice = createSlice({
       })
       .addCase(reorderColumns.fulfilled, (state, action) => {
         state.activeBoard = action.payload;
+        boardSnapshot = null;
       })
       // Task mutations → re-fetched activeBoard
       .addCase(addTask.fulfilled, (state, action) => {
@@ -238,8 +331,29 @@ const boardsSlice = createSlice({
       })
       .addCase(moveTask.fulfilled, (state, action) => {
         state.activeBoard = action.payload;
+        boardSnapshot = null;
+      })
+      .addCase(moveTask.rejected, (state) => {
+        // Revert optimistic move on API failure
+        if (boardSnapshot) {
+          state.activeBoard = boardSnapshot;
+          boardSnapshot = null;
+        }
+      })
+      .addCase(reorderColumns.rejected, (state) => {
+        // Revert optimistic column reorder on API failure
+        if (boardSnapshot) {
+          state.activeBoard = boardSnapshot;
+          boardSnapshot = null;
+        }
       });
   },
 });
+
+export const {
+  moveTaskOptimistic,
+  revertOptimisticMove,
+  reorderColumnsOptimistic,
+} = boardsSlice.actions;
 
 export default boardsSlice.reducer;

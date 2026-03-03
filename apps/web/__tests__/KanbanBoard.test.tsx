@@ -58,7 +58,8 @@ function renderWithStore(board: Board) {
       boards: {
         items: [],
         activeBoard: board,
-        status: 'succeeded' as const,
+        listStatus: 'succeeded' as const,
+        activeBoardStatus: 'succeeded' as const,
         error: null,
       },
     },
